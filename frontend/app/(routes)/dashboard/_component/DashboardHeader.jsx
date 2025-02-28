@@ -1,5 +1,4 @@
 import DarkModeToggle from '@/app/_component/DarkModeToggle';
-import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { UserButton, useUser } from '@clerk/nextjs';
