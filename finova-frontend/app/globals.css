@@ -1,0 +1,223 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	background: var(--background);
+	color: var(--foreground);
+	transition: background-color 0.3s, color 0.3s;
+}
+
+.page-transition-container {
+	opacity: 1;
+	transition: opacity 0.5s ease-in-out;
+}
+
+body.page-transition .page-transition-container {
+	opacity: 0;
+}
+.dark body {
+	background-color: var(--background);
+	color: var(--foreground);
+	transition: background-color 0.3s, color 0.3s;
+}
+
+html {
+	transition: background-color 0.3s, color 0.3s;
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--background);
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--btn-grad-middle);
+	border-radius: 10px;
+	transition: background-color 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--btn-grad-start);
+}
+
+.dark ::-webkit-scrollbar-track {
+	background: var(--card);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+	background: var(--btn-grad-middle);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+	background: var(--btn-grad-start);
+}
+
+@layer base {
+	:root {
+		--background: #eff1f3;
+		--foreground: #1e293b;
+		--nav: linear-gradient(to right, #00d2ff 0%, #3a7bd5 51%, #00d2ff 100%);
+		--sidebar: #ffffff;
+		--card: #ffffff;
+		--border: #e2e8f0;
+		--text-primary: #1e293b;
+		--btn-grad-start: #00c6ff;
+		--btn-grad-middle: #0072ff;
+		--btn-grad-end: #00c6ff;
+	}
+
+	.dark {
+		--background: linear-gradient(to bottom, rgb(23, 22, 64), rgb(41, 49, 141));
+		--nav: linear-gradient(to right, #005c97 0%, #363795 51%, #005c97 100%);
+		--foreground: #f8fafc;
+		--sidebar: #0f1535;
+		--card: #0a0f2a;
+		--border: #374151;
+		--btn-bg: #f8fafc;
+		--text-primary: #f8fafc;
+		--btn-grad-start: #1a2980;
+		--btn-grad-middle: #26d0ce;
+		--btn-grad-end: #1a2980;
+	}
+}
+
+@layer utilities {
+	.bg-background {
+		background-color: var(--background);
+	}
+
+	.text-foreground {
+		color: var(--foreground);
+	}
+
+	.bg-sidebar {
+		background-color: var(--sidebar);
+	}
+
+	.bg-card {
+		background-color: var(--card);
+		border-radius: 10px;
+		border: none;
+	}
+	.bg-dropdown {
+		background-color: var(--card);
+		border-radius: 10px;
+	}
+	.border-custom {
+		border-color: var(--border);
+	}
+	.bg-table {
+		background-color: var(--sidebar);
+		border-radius: 10px;
+	}
+	.bg-input {
+		background-color: var(--sidebar);
+		border-radius: 10px;
+		background-color: var(--card);
+	}
+	.text-primary {
+		color: var(--text-primary);
+	}
+
+	.bg-menu {
+		border-radius: 10px;
+	}
+
+	/* Responsive buttons */
+	.btn-grad {
+		background-image: linear-gradient(
+			to right,
+			var(--btn-grad-start) 0%,
+			var(--btn-grad-middle) 51%,
+			var(--btn-grad-end) 100%
+		);
+		padding: 10px 20px;
+		text-align: center;
+		text-transform: uppercase;
+		transition: 0.5s;
+		background-size: 200% auto;
+		color: white;
+		border-radius: 10px;
+		display: block;
+		@apply sm:px-6 sm:py-3 md:px-8 md:py-4 lg:px-10 lg:py-5;
+	}
+
+	.btn-grad:hover {
+		background-position: right center;
+		color: #fff;
+		text-decoration: none;
+	}
+
+	.btn-delete {
+		background-image: linear-gradient(
+			to right,
+			#e52d27 0%,
+			#b31217 51%,
+			#e52d27 100%
+		);
+		margin: 5px;
+		padding: 10px 20px;
+		text-align: center;
+		text-transform: uppercase;
+		transition: 0.5s;
+		background-size: 200% auto;
+		border-radius: 10px;
+		@apply sm:px-6 sm:py-3 md:px-8 md:py-4 lg:px-10 lg:py-5;
+	}
+
+	.btn-delete:hover {
+		background-position: right center;
+		color: #fff;
+		text-decoration: none;
+	}
+
+	.btn-edit {
+		background-image: linear-gradient(
+			to right,
+			#1fa2ff 0%,
+			#12d8fa 51%,
+			#1fa2ff 100%
+		);
+		margin: 5px;
+		padding: 10px 20px;
+		text-align: center;
+		text-transform: uppercase;
+		transition: 0.5s;
+		background-size: 200% auto;
+		border-radius: 10px;
+		@apply sm:px-6 sm:py-3 md:px-8 md:py-4 lg:px-10 lg:py-5;
+	}
+
+	.btn-edit:hover {
+		background-position: right center;
+		color: #fff;
+		text-decoration: none;
+	}
+
+	.btn-nav {
+		background-image: var(--nav);
+		margin: 5px;
+		padding: 10px 20px;
+		text-align: center;
+		text-transform: uppercase;
+		transition: 0.5s;
+		background-size: 200% auto;
+		border-radius: 10px;
+		@apply sm:px-6 sm:py-3 md:px-8 md:py-4 lg:px-10 lg:py-5;
+	}
+
+	.btn-nav:hover {
+		background-position: right center;
+		color: #fff;
+		text-decoration: none;
+	}
+
+	.round {
+		border-radius: 10px;
+	}
+}

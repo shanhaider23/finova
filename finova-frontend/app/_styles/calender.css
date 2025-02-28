@@ -1,0 +1,50 @@
+@import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+/* Custom Calendar Styles */
+
+.rbc-event {
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	padding: 5px;
+}
+
+.rbc-today {
+	background-color: rgba(0, 123, 255, 0.1);
+}
+.rbc-toolbar {
+	border: 1px solid var(--border);
+	background-color: var(--sidebar);
+	border-radius: 10px;
+}
+.rbc-month-view {
+	border: 1px solid var(--border);
+	background-color: var(--sidebar);
+	border-radius: 10px;
+}
+.rbc-toolbar button {
+	color: #007bff;
+	border: 1px solid var(--border);
+	background-color: transparent;
+	cursor: pointer;
+}
+
+.rbc-toolbar button:hover {
+	text-decoration: underline;
+}
+
+.rbc-header {
+	font-weight: bold;
+	padding: 10px;
+}
+
+.rbc-selected {
+	background-color: #007bff !important;
+	color: #fff !important;
+}
+
+/* .rbc-month-row {
+	border-bottom: 1px solid var(--border);
+	background-color: rgba(0, 123, 255, 0.1);
+} */
