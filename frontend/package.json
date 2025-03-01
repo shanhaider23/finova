@@ -6,6 +6,7 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
+		"postinstall": "tailwindcss -i ./styles/globals.css -o ./public/output.css",
 		"lint": "next lint",
 		"db:push": "npx drizzle-kit push",
 		"db:studio": "npx drizzle-kit studio"
