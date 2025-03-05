@@ -5,6 +5,7 @@ const API_URL = 'http://localhost:8000/api'; // Replace with your Django backend
 export async function GET(req) {
     try {
         const response = await axios.get(`${API_URL}/budgets/`);
+        console.log(response.data);
         return new Response(JSON.stringify(response.data), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },

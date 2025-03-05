@@ -191,7 +191,7 @@ const budgetSlice = createSlice({
     },
 });
 
-// export default budgetSlice.reducer;
+export default budgetSlice.reducer;
 
 
 // import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';

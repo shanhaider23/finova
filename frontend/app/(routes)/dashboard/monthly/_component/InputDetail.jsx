@@ -137,10 +137,10 @@ function InputDetail() {
 	};
 
 	return (
-		<div className="flex">
+		<div className="flex justify-between items-center gap-3">
 			<Dialog>
 				<DialogTrigger asChild>
-					<div className=" cursor-pointer w-full pr-5 ">
+					<div className=" cursor-pointer w-full ">
 						<button className="btn-grad w-full shadow-lg">
 							Add Income or Expense
 						</button>
@@ -272,7 +272,7 @@ function InputDetail() {
 			</Dialog>
 			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 				<DialogTrigger asChild>
-					<div className=" cursor-pointer w-full pr-5 ">
+					<div className=" cursor-pointer w-full ">
 						<button
 							className="btn-grad w-full shadow-lg"
 							onClick={() => setIsDialogOpen(true)}

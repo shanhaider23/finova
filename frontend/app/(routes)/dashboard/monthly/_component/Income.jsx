@@ -101,7 +101,7 @@ function MonthlyIncome({ month, year }) {
 				<div className="flex flex-col justify-center items-stretch gap-5">
 					<div>
 						<div className="w-full text-left border-collapse">
-							<div className="border round shadow-lg bg-green-600 dark:bg-green-800 dark:border-gray-700 flex justify-center items-center text-lg p-2 italic">
+							<div className=" flex justify-center items-center text-2xl ">
 								<h1>Income</h1>
 							</div>
 							<div>

@@ -13,26 +13,31 @@ function Monthly() {
 		<div className="m-5 overflow-hidden">
 			<div className="flex justify-center items-start gap-5 flex-wrap md:flex-nowrap  h-full overflow-x-auto">
 				<div className="w-full sm:w-[350px] min-w-[300px] self-start">
-					<CashFlow
-						month={month}
-						setMonth={setMonth}
-						year={year}
-						setYear={setYear}
-					/>
+					<div className="flex flex-col gap-5">
+						<div className="w-[100%]">
+							<InputDetail />
+						</div>
+						<div>
+							<CashFlow
+								month={month}
+								setMonth={setMonth}
+								year={year}
+								setYear={setYear}
+							/>
+						</div>
+					</div>
 				</div>
 
 				<div className="flex-grow w-full sm:w-auto flex flex-col gap-3">
-					<div className="w-full">
-						<InputDetail />
-					</div>
-
 					{/* Scrollable Section */}
-					<div className="flex gap-5 items-start justify-center flex-wrap md:flex-nowrap overflow-y-auto max-h-[700px] ">
-						{/* These components will be scrollable */}
-						<div className="flex-1 min-w-[250px]">
+					<div className="flex gap-5 items-start justify-center flex-wrap md:flex-nowrap overflow-hidden">
+						{/* Monthly Income with individual scroll */}
+						<div className="flex-1 min-w-[250px] max-h-[700px] overflow-y-auto">
 							<MonthlyIncome month={month} year={year} />
 						</div>
-						<div className="flex-1 min-w-[250px]">
+
+						{/* Monthly Expense with individual scroll */}
+						<div className="flex-1 min-w-[250px] max-h-[700px] overflow-y-auto">
 							<MonthlyExpense month={month} year={year} />
 						</div>
 					</div>
