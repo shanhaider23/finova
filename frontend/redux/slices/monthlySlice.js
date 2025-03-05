@@ -151,3 +151,122 @@ const monthlySlice = createSlice({
 });
 
 export default monthlySlice.reducer;
+
+
+// import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+// import axios from 'axios';
+// import { toast } from 'sonner';
+
+// // **Fetch monthly data from database**
+// export const fetchMonthly = createAsyncThunk(
+//   'monthly/fetchMonthly',
+//   async (email) => {
+//     try {
+//       const response = await axios.get('/api/monthly', {
+//         params: { email },
+//       });
+//       return response.data;
+//     } catch (error) {
+//       console.error('Error fetching monthly data:', error);
+//       throw error;
+//     }
+//   }
+// );
+
+// // **Add New Monthly Data**
+// export const addMonthly = createAsyncThunk(
+//   'monthly/addMonthly',
+//   async ({ date, name, type, category, amount, email }, { dispatch }) => {
+//     try {
+//       const response = await axios.post('/api/monthly', {
+//         date,
+//         name,
+//         type,
+//         category,
+//         amount,
+//         createdBy: email,
+//       });
+
+//       if (response.data) {
+//         toast.success('New Monthly Data Added');
+//         return response.data; // 🔹 Return the new monthly data so Redux state updates instantly
+//       }
+//     } catch (error) {
+//       console.error('Error adding monthly data:', error);
+//       toast.error('Failed to add monthly data. Please try again.');
+//       throw error;
+//     }
+//   }
+// );
+
+// // **Delete Monthly Data**
+// export const deleteMonthly = createAsyncThunk(
+//   'monthly/deleteMonthly',
+//   async ({ monthlyId, email }, { dispatch }) => {
+//     try {
+//       await axios.delete(`/api/monthly`, {
+//         params: { monthlyId },
+//       });
+//       toast.success('Monthly Data Deleted');
+
+//       // Refresh monthly data after deletion
+//       dispatch(fetchMonthly(email));
+
+//       return monthlyId; // Return deleted monthly data ID to update state
+//     } catch (error) {
+//       console.error('Error deleting monthly data:', error);
+//       toast.error('Failed to delete monthly data. Please try again.');
+//       throw error;
+//     }
+//   }
+// );
+
+// const monthlySlice = createSlice({
+//   name: 'monthly',
+//   initialState: {
+//     list: [],
+//     loading: false,
+//     error: null,
+//   },
+//   reducers: {},
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(fetchMonthly.pending, (state) => {
+//         state.loading = true;
+//       })
+//       .addCase(fetchMonthly.fulfilled, (state, action) => {
+//         state.loading = false;
+//         state.list = action.payload;
+//       })
+//       .addCase(fetchMonthly.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.error.message;
+//       })
+//       .addCase(addMonthly.pending, (state) => {
+//         state.loading = true;
+//       })
+//       .addCase(addMonthly.fulfilled, (state, action) => {
+//         state.loading = false;
+//         if (action.payload) {
+//           state.list.unshift(action.payload);
+//         }
+//       })
+//       .addCase(addMonthly.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.error.message;
+//       })
+//       .addCase(deleteMonthly.pending, (state) => {
+//         state.loading = true;
+//       })
+//       .addCase(deleteMonthly.fulfilled, (state, action) => {
+//         state.loading = false;
+//         state.list = state.list.filter((monthly) => monthly.id !== action.payload);
+//       })
+//       .addCase(deleteMonthly.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.error.message;
+//       });
+//   },
+// });
+
+// export default monthlySlice.reducer;
