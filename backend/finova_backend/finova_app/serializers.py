@@ -1,22 +1,12 @@
 from rest_framework import serializers
-from .models import Budget, Expense, Monthly, Task
+from .models import MonthlyIncome, MonthlyExpense
 
-class BudgetSerializer(serializers.ModelSerializer):
+class MonthlyIncomeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Budget
-        fields = '__all__'
+        model = MonthlyIncome
+        fields = ['id', 'month', 'amount']
 
 class ExpenseSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Expense
-        fields = '__all__'
-
-class MonthlySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Monthly
-        fields = '__all__'
-
-class TaskSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Task
-        fields = '__all__'
+        model = MonthlyExpense
+        fields = ['id', 'date', 'amount', 'category', 'description']
