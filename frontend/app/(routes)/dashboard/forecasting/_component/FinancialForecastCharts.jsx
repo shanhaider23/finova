@@ -1,26 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-    LineChart,
-    Line,
-    BarChart,
-    Bar,
-    AreaChart,
-    Area,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer,
-} from 'recharts';
 import axios from 'axios';
+import Charts from './Charts';
 
 export default function FinancialForecastCharts() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-
         const fetchData = async () => {
             try {
                 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -46,30 +32,27 @@ export default function FinancialForecastCharts() {
                 const incomeData = incomeResponse.data.next_six_month_income_prediction.map(item => ({
                     month: item.month,
                     income: item.predicted_income,
-
+                    expense: 0,
                     cashFlow: item.predicted_income,
                     isForecast: true,
                 }));
 
                 const expenseData = expenseResponse.data.next_six_months_expense_forecast.map(item => ({
                     month: item.month,
+                    income: 0,
                     expense: item.predicted_expense,
-
                     cashFlow: -item.predicted_expense,
                     isForecast: true,
                 }));
 
+                const monthlyData = monthlyResponse.data.map(item => ({
+                    month: item.date,
+                    income: item.type === 'income' ? item.amount : 0,
+                    expense: item.type === 'expense' ? item.amount : 0,
+                    cashFlow: item.type === 'income' ? item.amount : -item.amount,
+                    isForecast: false,
+                }));
 
-
-
-                const monthlyData = monthlyResponse.data
-                    .map(item => ({
-                        month: item.date,
-                        income: item.type === 'income' ? item.amount : 0,
-                        expense: item.type === 'expense' ? item.amount : 0,
-                        isForecast: false,
-                    }))
-                    .filter(item => item.income !== 0 || item.expense !== 0);
                 const combinedData = [...monthlyData, ...incomeData, ...expenseData];
 
                 const getMonthName = (dateStr) => {
@@ -77,6 +60,7 @@ export default function FinancialForecastCharts() {
                     const monthIndex = new Date(dateStr).getMonth();
                     return months[monthIndex];
                 };
+
                 const aggregatedData = combinedData.reduce((acc, item) => {
                     const monthName = getMonthName(item.month);
                     let existingEntry = acc.find(entry => entry.month === monthName);
@@ -86,14 +70,8 @@ export default function FinancialForecastCharts() {
                         acc.push(existingEntry);
                     }
 
-                    // Ensure actual data replaces forecasted data when available
-                    if (!item.isForecast) {
-                        existingEntry.income = item.income || existingEntry.income;
-                        existingEntry.expense = item.expense || existingEntry.expense;
-                    } else if (!existingEntry.income && !existingEntry.expense) {
-                        existingEntry.income += item.income || 0;
-                        existingEntry.expense += Math.abs(item.expense || 0);
-                    }
+                    if (item.income) existingEntry.income += item.income;
+                    if (item.expense) existingEntry.expense += Math.abs(item.expense);
 
                     existingEntry.cashFlow = existingEntry.income - existingEntry.expense;
 
@@ -120,82 +98,23 @@ export default function FinancialForecastCharts() {
                 🔮 Financial Forecasting Dashboard
             </h1>
 
-            {/* Line Chart */}
-            <div className="h-[400px]">
-                <h2 className="text-xl font-semibold mb-3">
-                    📈 Income vs Expense (Including Forecast)
-                </h2>
-                <ResponsiveContainer>
-                    <LineChart data={data}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
+            <Charts
+                headline="📈 Income & Expense (Including Forecast)"
+                data={data}
+                chartType="line"
+            />
 
-                        {/* Actual Data */}
-                        <Line
-                            type="monotone"
-                            dataKey="income"
-                            data={data}
-                            stroke="#52c41a"
-                            strokeWidth={2}
-                            name="Forecast Income"
-                        />
-                        <Line
-                            type="monotone"
-                            dataKey="expense"
-                            data={data}
-                            stroke="#ff4d4f"
-                            strokeWidth={2}
-                            name="Forecast Expense"
-                        />
+            <Charts
+                headline="📊 Income vs Expense (Including Forecast)"
+                data={data}
+                chartType="bar"
+            />
 
-
-                    </LineChart>
-                </ResponsiveContainer>
-            </div>
-
-            {/* Bar Chart */}
-            <div className="h-[400px]">
-                <h2 className="text-xl font-semibold mb-3">
-                    📊 Income vs Expense (Including Forecast)
-                </h2>
-                <ResponsiveContainer>
-                    <BarChart data={data}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="income" fill="#52c41a" name="Income" />
-                        <Bar dataKey="expense" fill="#ff4d4f" name="Expense" />
-                    </BarChart>
-                </ResponsiveContainer>
-            </div>
-
-            {/* Area Chart */}
-            <div className="h-[400px]">
-                <h2 className="text-xl font-semibold mb-3">
-                    🌊 Cash Flow (Actual vs Forecast)
-                </h2>
-                <ResponsiveContainer>
-                    <AreaChart data={data}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Area
-                            type="monotone"
-                            dataKey="cashFlow"
-                            stroke="#1890ff"
-                            fill="#1890ff"
-                            name="Cash Flow"
-                        />
-                    </AreaChart>
-                </ResponsiveContainer>
-            </div>
+            <Charts
+                headline="🌊 Cash Flow (Including Forecast)"
+                data={data}
+                chartType="area"
+            />
         </div>
     );
 }
