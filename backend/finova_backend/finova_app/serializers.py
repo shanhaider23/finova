@@ -1,12 +1,7 @@
 from rest_framework import serializers
-from .models import MonthlyIncome, MonthlyExpense
+from .models import MonthlyRecord
 
-class MonthlyIncomeSerializer(serializers.ModelSerializer):
+class MonthlyRecordSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MonthlyIncome
-        fields = ['id', 'month', 'amount']
-
-class ExpenseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MonthlyExpense
-        fields = ['id', 'date', 'amount', 'category', 'description']
+        model = MonthlyRecord
+        fields = '__all__'

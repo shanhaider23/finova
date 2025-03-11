@@ -2,16 +2,16 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from datetime import timedelta
-from .models import MonthlyIncome, MonthlyExpense
+from .models import MonthlyRecord
 
-def forecast_next_three_months_income():
+def forecast_next_six_months_income():
     # Load data from the database
-    incomes = MonthlyIncome.objects.all().order_by('month')
+    incomes = MonthlyRecord.objects.filter(type='income').order_by('date')
     if incomes.count() < 2:
         return "Not enough data"
 
     # Prepare data
-    data = pd.DataFrame(list(incomes.values('month', 'amount')))
+    data = pd.DataFrame(list(incomes.values('date', 'amount')))
     data['month_number'] = range(1, len(data) + 1)
 
     X = data[['month_number']]
@@ -21,7 +21,7 @@ def forecast_next_three_months_income():
     model = LinearRegression()
     model.fit(X, y)
 
-    # Predict the next 3 months
+    # Predict the next 6 months
     future_month_numbers = np.array([
         [len(data) + 1],
         [len(data) + 2],
@@ -32,10 +32,10 @@ def forecast_next_three_months_income():
     ])
     predictions = model.predict(future_month_numbers)
 
-    # Optional: Get last month and generate next 3 dates
-    last_month = data['month'].max()
+    # Optional: Get last date and generate next 6 dates
+    last_date = data['date'].max()
     future_months = [
-        (last_month + pd.DateOffset(months=i)).strftime('%Y-%m-%d')
+        (last_date + pd.DateOffset(months=i)).strftime('%Y-%m-%d')
         for i in range(1, 7)
     ]
 
@@ -48,9 +48,10 @@ def forecast_next_three_months_income():
         })
 
     return forecast
-def forecast_next_three_months_expenses():
+
+def forecast_next_six_months_expenses():
     # Load data from the database
-    expenses = MonthlyExpense.objects.all().order_by('date')
+    expenses = MonthlyRecord.objects.filter(type='expense').order_by('date')
     if expenses.count() < 2:
         return "Not enough data"
 
@@ -65,7 +66,7 @@ def forecast_next_three_months_expenses():
     model = LinearRegression()
     model.fit(X, y)
 
-    # Predict the next 3 months
+    # Predict the next 6 months
     future_month_numbers = np.array([
         [len(data) + 1],
         [len(data) + 2],
@@ -76,7 +77,7 @@ def forecast_next_three_months_expenses():
     ])
     predictions = model.predict(future_month_numbers)
 
-    # Optional: Get last date and create next 3 month dates
+    # Optional: Get last date and create next 6 month dates
     last_date = data['date'].max()
     future_months = [
         (last_date + pd.DateOffset(months=i)).strftime('%Y-%m-%d')

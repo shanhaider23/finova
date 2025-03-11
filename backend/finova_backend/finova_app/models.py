@@ -1,18 +1,12 @@
 from django.db import models
 
-class MonthlyIncome(models.Model):
-    month = models.DateField()
-    amount = models.FloatField()
-
-    def __str__(self):
-        return f"{self.month} - {self.amount}"
-
-
-class MonthlyExpense(models.Model):
+class MonthlyRecord(models.Model):
     date = models.DateField()
+    name = models.CharField(max_length=255)
+    type = models.CharField(max_length=50)  # 'income' or 'expense'
+    category = models.CharField(max_length=100)
     amount = models.FloatField()
-    category = models.CharField(max_length=100)  # Optional: for categorization
-    description = models.TextField(blank=True, null=True)  # Optional
+    created_by = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"{self.date} - {self.amount}"
+        return f"{self.date} - {self.name} - {self.type} - {self.amount}"

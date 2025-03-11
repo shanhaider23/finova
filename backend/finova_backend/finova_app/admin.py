@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import MonthlyIncome
+from .models import MonthlyRecord
 
-admin.site.register(MonthlyIncome)
+admin.site.register(MonthlyRecord)
 
 # from finova_app.models import Budget, Expense, Monthly, Task
 
