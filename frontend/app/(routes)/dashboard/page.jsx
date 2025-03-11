@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, use } from 'react';
+import React, { useEffect, use, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import CardInfo from './_component/CardInfo';
@@ -12,8 +12,11 @@ import { fetchMonthly } from '@/redux/slices/monthlySlice';
 import { useSelector, useDispatch } from 'react-redux';
 import Welcome from './_component/Welcome';
 import PiChartDashboard from './_component/PiChartDashboard';
+import axios from 'axios';
 
 function Dashboard({ params: paramsPromise }) {
+	const [expenseForecast, setExpenseForecast] = useState([]);
+	const [incomeForecast, setIncomeForecast] = useState([]);
 	const params = use(paramsPromise);
 	const { isSignedIn, user } = useUser();
 	const router = useRouter();
@@ -35,26 +38,60 @@ function Dashboard({ params: paramsPromise }) {
 			dispatch(fetchMonthly(user.primaryEmailAddress.emailAddress));
 		}
 	}, [isSignedIn, user, params.id]);
+	const getMonthName = (dateStr) => {
+		const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		const monthIndex = new Date(dateStr).getMonth();
+		return months[monthIndex];
+	};
+	useEffect(() => {
 
-	const expenseForecast = [
-		{ name: 'Jan', amount: 1500 },
-		{ name: 'Feb', amount: 4200 },
-		{ name: 'Mar', amount: 6900 },
-		{ name: 'Apr', amount: 3400 },
-		{ name: 'May', amount: 4700 },
-		{ name: 'Jun', amount: 8300 },
-		{ name: 'Jul', amount: 7400 },
-	];
+		const fetchData = async () => {
+			try {
+				const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-	const incomeForecast = [
-		{ name: 'Jan', amount: 2000 },
-		{ name: 'Feb', amount: 6200 },
-		{ name: 'Mar', amount: 6100 },
-		{ name: 'Apr', amount: 3000 },
-		{ name: 'May', amount: 7500 },
-		{ name: 'Jun', amount: 6400 },
-		{ name: 'Jul', amount: 9600 },
-	];
+				const [incomeResponse, expenseResponse] = await Promise.all([
+					axios.get(`${apiBaseUrl}/api/forecast-income/`),
+					axios.get(`${apiBaseUrl}/api/forecast-expenses/`),
+
+				]);
+
+				if (!incomeResponse.data.next_six_month_income_prediction ||
+					!Array.isArray(incomeResponse.data.next_six_month_income_prediction)) {
+					console.error("Error: incomeResponse.data.next_six_month_income_prediction is not an array", incomeResponse.data);
+					return;
+				}
+
+				if (!expenseResponse.data.next_six_months_expense_forecast ||
+					!Array.isArray(expenseResponse.data.next_six_months_expense_forecast)) {
+					console.error("Error: expenseResponse.data.next_six_months_expense_forecast is not an array", expenseResponse.data);
+					return;
+				}
+
+				const incomeData = incomeResponse.data.next_six_month_income_prediction.map(item => ({
+					month: getMonthName(item.month),
+					amount: item.predicted_income,
+
+
+				}));
+
+				const expenseData = expenseResponse.data.next_six_months_expense_forecast.map(item => ({
+					month: getMonthName(item.month),
+					amount: item.predicted_expense,
+
+
+				}));
+
+				setIncomeForecast(incomeData)
+				setExpenseForecast(expenseData)
+
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
+		};
+
+		fetchData();
+	}, []);
+
 
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(6,1fr)] grid-rows-[repeat(3,350px)] sm:grid-rows-[repeat(3,300px)] gap-5 pl-5 pr-5 pt-5">
