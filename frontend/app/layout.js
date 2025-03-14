@@ -1,6 +1,6 @@
 'use client';
 import { Outfit } from "next/font/google";
-import "./globals.css";
+import "./styles/globals.css";
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from "@/components/ui/sonner";
 import Header from "./_component/Header";
