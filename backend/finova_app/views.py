@@ -7,8 +7,13 @@ from .ml import forecast_next_six_months_income, forecast_next_six_months_expens
 
 # List all income entries or add new income data
 class MonthlyRecordViewSet(generics.ListCreateAPIView):
-    queryset = MonthlyRecord.objects.all()
     serializer_class = MonthlyRecordSerializer
+
+    def get_queryset(self):
+        user_email = self.request.query_params.get('email')
+        if user_email:
+            return MonthlyRecord.objects.filter(created_by=user_email)
+        return MonthlyRecord.objects.none()
 
 class MonthlyRecordDeleteView(generics.DestroyAPIView):
     queryset = MonthlyRecord.objects.all()
@@ -51,4 +56,3 @@ class ExpenseForecastView(APIView):
         if forecast == "Not enough data":
             return Response({"error": "Not enough data to make a forecast."}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"next_six_months_expense_forecast": forecast}, status=status.HTTP_200_OK)
- 

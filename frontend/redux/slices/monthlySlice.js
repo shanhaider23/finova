@@ -1,10 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { db } from '@/utils/dbConfig';
-import { Monthly } from '@/utils/schema';
-import { eq, desc } from 'drizzle-orm';
+import axios from 'axios';
 import moment from 'moment';
 import { toast } from 'sonner';
-import axios from 'axios';
 
 // **Fetch Monthly Data from Database**
 export const fetchMonthly = createAsyncThunk(
@@ -28,10 +25,8 @@ export const fetchMonthly = createAsyncThunk(
             console.error('Error fetching monthly data:', error);
             throw error;
         }
-
     }
 );
-
 
 // **Add New Monthly Record**
 export const addMonthly = createAsyncThunk(
@@ -40,7 +35,6 @@ export const addMonthly = createAsyncThunk(
         if (!email) throw new Error('User email is required');
 
         try {
-
             await axios({
                 method: 'post',
                 url: `http://127.0.0.1:8000/api/monthly/`,
@@ -52,7 +46,6 @@ export const addMonthly = createAsyncThunk(
                     amount,
                     created_by: email,
                 }
-
             });
             toast.success('New Monthly Record Added');
             dispatch(fetchMonthly(email));
@@ -64,14 +57,13 @@ export const addMonthly = createAsyncThunk(
     }
 );
 
-
 // **Delete Monthly Record**
 export const deleteMonthly = createAsyncThunk(
     'monthly/deleteMonthly',
     async ({ monthlyId, email }, { dispatch }) => {
         console.log('monthlyId', monthlyId);
         try {
-            await axios.delete(`http://localhost:8000/api/monthly/${monthlyId}/delete/`);
+            await axios.delete(`http://127.0.0.1:8000/api/monthly/${monthlyId}/delete/`);
 
             toast.success('Monthly Record Deleted');
             dispatch(fetchMonthly(email));
@@ -83,11 +75,13 @@ export const deleteMonthly = createAsyncThunk(
         }
     }
 );
+
+// **Update Monthly Record**
 export const updateMonthly = createAsyncThunk(
     'monthly/updateMonthly',
     async ({ id, amount, category, name, email }, { dispatch }) => {
         try {
-            const response = await axios.put(`http://localhost:8000/api/monthly/${id}/update/`, {
+            const response = await axios.put(`http://127.0.0.1:8000/api/monthly/${id}/update/`, {
                 amount,
                 category,
                 name,
@@ -157,4 +151,3 @@ const monthlySlice = createSlice({
 });
 
 export default monthlySlice.reducer;
-
