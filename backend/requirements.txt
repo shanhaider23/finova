@@ -4,3 +4,6 @@ psycopg2-binary
 dj-database-url
 gunicorn
 django-cors-headers==3.7.0
+pandas
+scikit-learn
+numpy
