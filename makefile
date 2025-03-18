@@ -1,40 +1,32 @@
-
 build:
-    docker-compose up --build
+	 docker-compose up --build
 
+start:
+	 docker-compose up
 
-up:
-    docker-compose up
+stop:
+	 docker-compose down
 
-
-down:
-    docker-compose down
-
-s
 restart:
-    docker-compose down && docker-compose up --build
-
+	 docker-compose down && docker-compose up --build
 
 migrate:
-    docker-compose run backend python manage.py migrate
-
+	 docker-compose run backend python manage.py migrate
 
 createsuperuser:
-    docker-compose run backend python manage.py createsuperuser
-
+	 docker-compose run backend python manage.py createsuperuser
 
 collectstatic:
-    docker-compose run backend python manage.py collectstatic --noinput
+	 docker-compose run backend python manage.py collectstatic --noinput
 
 logs:
-    docker-compose logs -f
-
+	 docker-compose logs -f
 
 logs-backend:
-    docker-compose logs -f backend
+	 docker-compose logs -f backend
 
 logs-frontend:
-    docker-compose logs -f frontend
+	 docker-compose logs -f frontend
 
 logs-db:
-    docker-compose logs -f db
+	 docker-compose logs -f db
