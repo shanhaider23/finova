@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { Loader } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { addExpense } from '@/redux/slices/expenseSlice';
+import { useUser } from '@clerk/nextjs';
 
 function AddExpense({ budgetId, refreshData }) {
 	const [name, setName] = useState('');
@@ -14,6 +15,8 @@ function AddExpense({ budgetId, refreshData }) {
 	const [loading, setLoading] = useState(false);
 
 	const dispatch = useDispatch();
+	const { user } = useUser();
+	const email = user?.primaryEmailAddress?.emailAddress;
 
 	const handleAddExpense = async () => {
 		if (!name || !amount || !category) {
@@ -23,7 +26,15 @@ function AddExpense({ budgetId, refreshData }) {
 
 		setLoading(true);
 
-		dispatch(addExpense({ name, amount, budgetId, category }));
+		dispatch(addExpense({ name, amount, budgetId, category, email }))
+			.unwrap()
+			.then(() => {
+				toast.success('New Expense Added');
+			})
+			.catch((error) => {
+				toast.error('Failed to add expense. Please try again.');
+				console.error('Error adding expense:', error);
+			});
 
 		await refreshData();
 		setName('');

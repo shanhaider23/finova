@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { db } from '@/utils/dbConfig';
-import { Tasks } from '@/utils/schema';
-import { eq, desc } from 'drizzle-orm';
+import axios from 'axios';
 import moment from 'moment';
 import { toast } from 'sonner';
 
@@ -9,86 +7,82 @@ import { toast } from 'sonner';
 export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (email) => {
     if (!email) throw new Error('User email is required');
 
-    const results = await db
-        .select({
-            id: Tasks.id,
-            title: Tasks.title,
-            status: Tasks.status,
-            date: Tasks.date,
-            description: Tasks.description,
-            createdAt: Tasks.createdAt,
-        })
-        .from(Tasks)
-        .where(eq(Tasks.createdBy, email))
-        .orderBy(desc(Tasks.id));
-
-    console.log('Fetched tasks:', results);
-    return [...results];
+    try {
+        const response = await axios.get('http://127.0.0.1:8000/api/tasks/', {
+            params: { email },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching tasks:', error);
+        throw error;
+    }
 });
 
 // **Add Task**
-export const addTasks = createAsyncThunk('tasks/addTasks', async ({ date, title, status, description, email }, { dispatch }) => {
-    try {
-        const [newTask] = await db
-            .insert(Tasks)
-            .values({
+export const addTasks = createAsyncThunk(
+    'tasks/addTasks',
+    async ({ date, title, status, description, email }, { dispatch }) => {
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/api/tasks/', {
                 date,
                 title,
-                createdAt: moment().format('DD/MM/YYYY'),
+                created_at: moment().format('YYYY-MM-DD'),
                 status,
                 description,
-                createdBy: email,
-            })
-            .returning({
-                id: Tasks.id,
-                date: Tasks.date,
-                title: Tasks.title,
-                createdAt: Tasks.createdAt,
-                status: Tasks.status,
-                description: Tasks.description,
-                email: Tasks.createdBy,
+                created_by: email,
             });
 
-        if (newTask) {
-            toast.success('New Task Added');
-            dispatch(fetchTasks()); // Ensure UI updates immediately
-            return newTask;
+            if (response.data) {
+                toast.success('New Task Added');
+                dispatch(fetchTasks(email)); // Ensure UI updates immediately
+                return response.data;
+            }
+        } catch (error) {
+            console.error('Error adding task:', error);
+            toast.error('Failed to add task. Please try again.');
+            throw error;
         }
-    } catch (error) {
-        console.error('Error adding task:', error);
-        toast.error('Failed to add task. Please try again.');
-        throw error;
     }
-});
+);
 
 // **Update Task Status**
-export const updateTask = createAsyncThunk('tasks/updateTask', async ({ id, status }, { dispatch }) => {
-    try {
-        await db.update(Tasks).set({ status }).where(eq(Tasks.id, id));
-        toast.success('Task status updated');
-        dispatch(fetchTasks()); // Refresh task list
-        return { id, status };
-    } catch (error) {
-        console.error('Error updating task status:', error);
-        toast.error('Failed to update task. Please try again.');
-        throw error;
+export const updateTask = createAsyncThunk(
+    'tasks/updateTask',
+    async ({ id, status, email }, { dispatch }) => {
+        try {
+            const response = await axios.put(`http://127.0.0.1:8000/api/tasks/${id}/`, {
+                status,
+            });
+
+            if (response.data) {
+                toast.success('Task status updated');
+                dispatch(fetchTasks(email)); // Refresh task list
+                return { id, status };
+            }
+        } catch (error) {
+            console.error('Error updating task status:', error);
+            toast.error('Failed to update task. Please try again.');
+            throw error;
+        }
     }
-});
+);
 
 // **Delete Task**
-export const deleteTasks = createAsyncThunk('tasks/deleteTasks', async ({ taskId }, { dispatch }) => {
-    try {
-        const deletedTask = await db.delete(Tasks).where(eq(Tasks.id, taskId)).returning();
-        if (!deletedTask) throw new Error("Task not found");
-        toast.success('Task Deleted');
-        dispatch(fetchTasks()); // Refresh task list
-        return taskId;
-    } catch (error) {
-        console.error('Error deleting task:', error);
-        toast.error('Failed to delete task. Please try again.');
-        throw error;
+export const deleteTasks = createAsyncThunk(
+    'tasks/deleteTasks',
+    async ({ taskId, email }, { dispatch }) => {
+        try {
+            await axios.delete(`http://127.0.0.1:8000/api/tasks/${taskId}/`);
+            toast.success('Task Deleted');
+            dispatch(fetchTasks(email)); // Refresh task list
+            return taskId;
+        } catch (error) {
+            console.error('Error deleting task:', error);
+            toast.error('Failed to delete task. Please try again.');
+            throw error;
+        }
     }
-});
+);;
 
 
 const todoSlice = createSlice({
@@ -98,8 +92,10 @@ const todoSlice = createSlice({
         loading: false,
         error: null,
     },
+    reducers: {},
     extraReducers: (builder) => {
         builder
+            // **Fetch Tasks**
             .addCase(fetchTasks.pending, (state) => {
                 state.loading = true;
             })
@@ -111,20 +107,49 @@ const todoSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             })
+
+            // **Add Task**
+            .addCase(addTasks.pending, (state) => {
+                state.loading = true;
+            })
             .addCase(addTasks.fulfilled, (state, action) => {
+                state.loading = false;
                 state.list.unshift(action.payload); // Add new task to UI immediately
             })
+            .addCase(addTasks.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
+
+            // **Update Task**
+            .addCase(updateTask.pending, (state) => {
+                state.loading = true;
+            })
             .addCase(updateTask.fulfilled, (state, action) => {
+                state.loading = false;
                 const { id, status } = action.payload;
                 const task = state.list.find((task) => task.id === id);
                 if (task) {
                     task.status = status;
                 }
             })
+            .addCase(updateTask.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
+
+            // **Delete Task**
+            .addCase(deleteTasks.pending, (state) => {
+                state.loading = true;
+            })
             .addCase(deleteTasks.fulfilled, (state, action) => {
-                state.list = state.list.filter((task) => task.id !== action.payload);
+                state.loading = false;
+                state.list = state.list.filter((task) => task.id !== action.payload); // Remove deleted task from UI
+            })
+            .addCase(deleteTasks.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
             });
     },
 });
-
 export default todoSlice.reducer;

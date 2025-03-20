@@ -1,9 +1,60 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import MonthlyRecord
-from .serializers import MonthlyRecordSerializer
+from .models import MonthlyRecord, Budget, Expense, Task
+from .serializers import MonthlyRecordSerializer, BudgetSerializer, ExpenseSerializer, TaskSerializer
 from .ml import forecast_next_six_months_income, forecast_next_six_months_expenses
+
+
+# Budget Views
+class BudgetListCreateView(generics.ListCreateAPIView):
+    queryset = Budget.objects.all()
+    serializer_class = BudgetSerializer
+
+    def get_queryset(self):
+        user_email = self.request.query_params.get('email')
+        if user_email:
+            return Budget.objects.filter(created_by=user_email)
+        return Budget.objects.none()
+
+
+class BudgetDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Budget.objects.all()
+    serializer_class = BudgetSerializer
+
+
+# Expense Views
+class ExpenseListCreateView(generics.ListCreateAPIView):
+    queryset = Expense.objects.all()
+    serializer_class = ExpenseSerializer
+
+    def get_queryset(self):
+        user_email = self.request.query_params.get('email')
+        if user_email:
+            return Expense.objects.filter(created_by=user_email)
+        return Expense.objects.none()
+
+
+class ExpenseDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Expense.objects.all()
+    serializer_class = ExpenseSerializer
+
+
+# Task Views
+class TaskListCreateView(generics.ListCreateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        user_email = self.request.query_params.get('email')
+        if user_email:
+            return Task.objects.filter(created_by=user_email)
+        return Task.objects.none()
+
+
+class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
 
 # List all income entries or add new income data
 class MonthlyRecordViewSet(generics.ListCreateAPIView):

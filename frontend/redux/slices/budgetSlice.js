@@ -1,25 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { db } from '@/utils/dbConfig';
-import { Budgets, Expenses } from '@/utils/schema';
-import { eq, sql, desc, getTableColumns } from 'drizzle-orm';
+import axios from 'axios';
 import { toast } from 'sonner';
 
-// **Fetch budgets from database**
+// **Fetch budgets from Django API**
 export const fetchBudgets = createAsyncThunk('budgets/fetchBudgets', async (email) => {
     try {
-        const results = await db
-            .select({
-                ...getTableColumns(Budgets),
-                totalSpend: sql`sum(${Expenses.amount})`.mapWith(Number),
-                totalItem: sql`count(${Expenses.id})`.mapWith(Number),
-            })
-            .from(Budgets)
-            .leftJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
-            .where(eq(Budgets.createdBy, email))
-            .groupBy(Budgets.id)
-            .orderBy(desc(Budgets.id));
-
-        return results;
+        const response = await axios.get('http://127.0.0.1:8000/api/budgets/', {
+            params: { email },
+        });
+        console.log('Fetched budgets:', response.data); // Debugging line
+        return response.data;
     } catch (error) {
         console.error('Error fetching budgets:', error);
         throw error;
@@ -31,27 +21,17 @@ export const createBudget = createAsyncThunk(
     'budgets/createBudget',
     async ({ name, amount, currency, email, emojiIcon }) => {
         try {
-            const [newBudget] = await db
-                .insert(Budgets)
-                .values({
-                    name,
-                    amount,
-                    currency,
-                    createdBy: email,
-                    icon: emojiIcon,
-                })
-                .returning({
-                    id: Budgets.id,
-                    name: Budgets.name,
-                    amount: Budgets.amount,
-                    currency: Budgets.currency,
-                    createdBy: Budgets.createdBy,
-                    icon: Budgets.icon,
-                });
+            const response = await axios.post('http://127.0.0.1:8000/api/budgets/', {
+                name,
+                amount,
+                currency,
+                created_by: email,
+                icon: emojiIcon,
+            });
 
-            if (newBudget) {
+            if (response.data) {
                 toast.success('New Budget Created');
-                return newBudget; // 🔹 Return the new budget to update Redux state instantly
+                return response.data; // Return the new budget to update Redux state instantly
             }
         } catch (error) {
             console.error('Error creating budget:', error);
@@ -66,19 +46,15 @@ export const editBudget = createAsyncThunk(
     'budgets/editBudget',
     async ({ budgetId, name, amount, emojiIcon }) => {
         try {
-            const [updatedBudget] = await db
-                .update(Budgets)
-                .set({
-                    name,
-                    amount,
-                    icon: emojiIcon,
-                })
-                .where(eq(Budgets.id, budgetId))
-                .returning();
+            const response = await axios.put(`http://127.0.0.1:8000/api/budgets/${budgetId}/`, {
+                name,
+                amount,
+                icon: emojiIcon,
+            });
 
-            if (updatedBudget) {
+            if (response.data) {
                 toast.success('Budget Updated');
-                return updatedBudget; // 🔹 Return updated budget to update Redux state instantly
+                return response.data; // Return updated budget to update Redux state instantly
             }
         } catch (error) {
             console.error('Error editing budget:', error);
@@ -88,27 +64,15 @@ export const editBudget = createAsyncThunk(
     }
 );
 
-
 // **Delete Budget**
 export const deleteBudget = createAsyncThunk(
     'budgets/deleteBudget',
-    async ({ paramsId, email }) => {
+    async (budgetId) => {
         try {
-            // Delete all related expenses first
-            await db.delete(Expenses).where(eq(Expenses.budgetId, paramsId));
+            await axios.delete(`http://127.0.0.1:8000/api/budgets/${budgetId}/`);
 
-            // Delete the budget
-            const deletedBudget = await db
-                .delete(Budgets)
-                .where(eq(Budgets.id, paramsId))
-                .returning();
-
-            if (deletedBudget) {
-                toast.success('Budget Deleted');
-                return paramsId;
-            } else {
-                throw new Error('Failed to delete budget');
-            }
+            toast.success('Budget Deleted');
+            return budgetId; // Return the deleted budget ID to remove it from Redux state
         } catch (error) {
             console.error('Error deleting budget:', error);
             toast.error('Failed to delete budget. Please try again.');
@@ -116,8 +80,6 @@ export const deleteBudget = createAsyncThunk(
         }
     }
 );
-
-
 
 const budgetSlice = createSlice({
     name: 'budgets',
@@ -142,7 +104,7 @@ const budgetSlice = createSlice({
                 state.error = action.error.message;
             })
 
-            // **Create Budget (Instant State Update)**
+            // **Create Budget**
             .addCase(createBudget.pending, (state) => {
                 state.loading = true;
             })
@@ -150,7 +112,7 @@ const budgetSlice = createSlice({
                 state.loading = false;
 
                 if (action.payload) {
-                    state.list.unshift(action.payload); // ✅ Add new budget instantly
+                    state.list.unshift(action.payload); // Add new budget instantly
                 }
             })
             .addCase(createBudget.rejected, (state, action) => {
@@ -158,7 +120,7 @@ const budgetSlice = createSlice({
                 state.error = action.error.message;
             })
 
-            // **Edit Budget (Update State)**
+            // **Edit Budget**
             .addCase(editBudget.pending, (state) => {
                 state.loading = true;
             })
@@ -168,7 +130,7 @@ const budgetSlice = createSlice({
                 if (action.payload) {
                     state.list = state.list.map((budget) =>
                         budget.id === action.payload.id ? action.payload : budget
-                    ); // ✅ Update the edited budget instantly
+                    ); // Update the edited budget instantly
                 }
             })
             .addCase(editBudget.rejected, (state, action) => {
@@ -176,13 +138,13 @@ const budgetSlice = createSlice({
                 state.error = action.error.message;
             })
 
-            // **Delete Budget (Remove from State)**
+            // **Delete Budget**
             .addCase(deleteBudget.pending, (state) => {
                 state.loading = true;
             })
             .addCase(deleteBudget.fulfilled, (state, action) => {
                 state.loading = false;
-                state.list = state.list.filter((budget) => budget.id !== action.payload); // ✅ Remove deleted budget instantly
+                state.list = state.list.filter((budget) => budget.id !== action.payload); // Remove deleted budget instantly
             })
             .addCase(deleteBudget.rejected, (state, action) => {
                 state.loading = false;
@@ -192,166 +154,3 @@ const budgetSlice = createSlice({
 });
 
 export default budgetSlice.reducer;
-
-
-// import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// import axios from 'axios';
-// import { toast } from 'sonner';
-
-// // **Fetch budgets from database**
-// export const fetchBudgets = createAsyncThunk('budgets/fetchBudgets', async (email) => {
-//     try {
-//         const response = await axios.get('/api/budgets', {
-//             params: { email },
-//         });
-//         return response.data;
-//     } catch (error) {
-//         console.error('Error fetching budgets:', error);
-//         throw error;
-//     }
-// });
-
-// // **Create Budget**
-// export const createBudget = createAsyncThunk(
-//     'budgets/createBudget',
-//     async ({ name, amount, currency, email, emojiIcon }) => {
-//         try {
-//             const response = await axios.post('/api/budgets', {
-//                 name,
-//                 amount,
-//                 currency,
-//                 createdBy: email,
-//                 icon: emojiIcon,
-//             });
-
-//             if (response.data) {
-//                 toast.success('New Budget Created');
-//                 return response.data; // 🔹 Return the new budget to update Redux state instantly
-//             }
-//         } catch (error) {
-//             console.error('Error creating budget:', error);
-//             toast.error('Failed to create budget. Please try again.');
-//             throw error;
-//         }
-//     }
-// );
-
-// // **Edit Budget**
-// export const editBudget = createAsyncThunk(
-//     'budgets/editBudget',
-//     async ({ budgetId, name, amount, emojiIcon }) => {
-//         try {
-//             const response = await axios.put(`/api/budgets/${budgetId}`, {
-//                 name,
-//                 amount,
-//                 icon: emojiIcon,
-//             });
-
-//             if (response.data) {
-//                 toast.success('Budget Updated');
-//                 return response.data; // 🔹 Return updated budget to update Redux state instantly
-//             }
-//         } catch (error) {
-//             console.error('Error editing budget:', error);
-//             toast.error('Failed to edit budget. Please try again.');
-//             throw error;
-//         }
-//     }
-// );
-
-// // **Delete Budget**
-// export const deleteBudget = createAsyncThunk(
-//     'budgets/deleteBudget',
-//     async ({ paramsId, email }) => {
-//         try {
-//             const response = await axios.delete(`/api/budgets/${paramsId}`, {
-//                 data: { email },
-//             });
-
-//             if (response.data) {
-//                 toast.success('Budget Deleted');
-//                 return paramsId;
-//             } else {
-//                 throw new Error('Failed to delete budget');
-//             }
-//         } catch (error) {
-//             console.error('Error deleting budget:', error);
-//             toast.error('Failed to delete budget. Please try again.');
-//             throw error;
-//         }
-//     }
-// );
-
-// const budgetSlice = createSlice({
-//     name: 'budgets',
-//     initialState: {
-//         list: [],
-//         loading: false,
-//         error: null,
-//     },
-//     reducers: {},
-//     extraReducers: (builder) => {
-//         builder
-//             // **Fetch Budgets**
-//             .addCase(fetchBudgets.pending, (state) => {
-//                 state.loading = true;
-//             })
-//             .addCase(fetchBudgets.fulfilled, (state, action) => {
-//                 state.loading = false;
-//                 state.list = action.payload;
-//             })
-//             .addCase(fetchBudgets.rejected, (state, action) => {
-//                 state.loading = false;
-//                 state.error = action.error.message;
-//             })
-
-//             // **Create Budget (Instant State Update)**
-//             .addCase(createBudget.pending, (state) => {
-//                 state.loading = true;
-//             })
-//             .addCase(createBudget.fulfilled, (state, action) => {
-//                 state.loading = false;
-
-//                 if (action.payload) {
-//                     state.list.unshift(action.payload); // ✅ Add new budget instantly
-//                 }
-//             })
-//             .addCase(createBudget.rejected, (state, action) => {
-//                 state.loading = false;
-//                 state.error = action.error.message;
-//             })
-
-//             // **Edit Budget (Update State)**
-//             .addCase(editBudget.pending, (state) => {
-//                 state.loading = true;
-//             })
-//             .addCase(editBudget.fulfilled, (state, action) => {
-//                 state.loading = false;
-
-//                 if (action.payload) {
-//                     state.list = state.list.map((budget) =>
-//                         budget.id === action.payload.id ? action.payload : budget
-//                     ); // ✅ Update the edited budget instantly
-//                 }
-//             })
-//             .addCase(editBudget.rejected, (state, action) => {
-//                 state.loading = false;
-//                 state.error = action.error.message;
-//             })
-
-//             // **Delete Budget (Remove from State)**
-//             .addCase(deleteBudget.pending, (state) => {
-//                 state.loading = true;
-//             })
-//             .addCase(deleteBudget.fulfilled, (state, action) => {
-//                 state.loading = false;
-//                 state.list = state.list.filter((budget) => budget.id !== action.payload); // ✅ Remove deleted budget instantly
-//             })
-//             .addCase(deleteBudget.rejected, (state, action) => {
-//                 state.loading = false;
-//                 state.error = action.error.message;
-//             });
-//     },
-// });
-
-// export default budgetSlice.reducer;
