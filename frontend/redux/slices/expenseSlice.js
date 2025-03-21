@@ -9,6 +9,7 @@ export const fetchExpenses = createAsyncThunk('expenses/fetchExpenses', async (e
     const response = await axios.get('http://127.0.0.1:8000/api/expenses/', {
       params: { email },
     });
+    console.log('Fetched expenses:', response.data); // Debugging line
     return response.data;
   } catch (error) {
     console.error('Error fetching expenses:', error);

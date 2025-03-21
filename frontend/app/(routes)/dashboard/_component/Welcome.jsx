@@ -39,6 +39,8 @@ function Welcome({ budgetList }) {
 			setCurrency(budget.currency);
 			total_budget += Number(budget.amount);
 			total_spend += budget.totalSpend;
+			console.log(budget.totalSpend, 'totalSpend');
+			console.log(budget, 'amount');
 		});
 		setTotalBudget(total_budget);
 		setTotalSpend(total_spend);
@@ -63,9 +65,9 @@ function Welcome({ budgetList }) {
 				</div>
 				<div>
 					{fromCurrency &&
-					toCurrency &&
-					rates[fromCurrency] &&
-					rates[toCurrency] ? (
+						toCurrency &&
+						rates[fromCurrency] &&
+						rates[toCurrency] ? (
 						<>
 							<div className="flex justify-start sm:justify-center items-center gap-3">
 								<div className="flex items-center gap-2">

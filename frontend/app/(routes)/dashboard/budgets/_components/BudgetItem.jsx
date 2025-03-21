@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 function BudgetItem({ budget, expensesList }) {
 	const totalSpend = (expensesList || [])
-		.filter((expense) => expense?.budgetId === budget?.id)
+		.filter((expense) => expense?.budget === budget?.id)
 		.reduce((sum, expense) => sum + Number(expense?.amount || 0), 0);
 
 	const progress = Math.min((totalSpend / budget.amount) * 100, 100);
@@ -23,22 +23,20 @@ function BudgetItem({ budget, expensesList }) {
 							</h2>
 
 							<p className="text-sm text-gray-500 dark:text-gray-400">
-								{`${
-									(
+								{`${(
+									expensesList?.filter(
+										(expense) => expense.budget === budget.id
+									) || []
+								).length
+									} 
+                ${(
 										expensesList?.filter(
-											(expense) => expense.budgetId === budget.id
-										) || []
-									).length
-								} 
-                ${
-									(
-										expensesList?.filter(
-											(expense) => expense.budgetId === budget.id
+											(expense) => expense.budget === budget.id
 										) || []
 									).length === 1
 										? 'item'
 										: 'items'
-								}`}
+									}`}
 							</p>
 						</div>
 					</div>

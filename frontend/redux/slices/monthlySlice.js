@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 export const fetchMonthly = createAsyncThunk(
     'monthly/fetchMonthly',
     async (email) => {
-        if (!email) throw new Error('User email is required');
+        // if (!email) throw new Error('User email is required');
         try {
             // Fetch data from Django backend
             const response = await axios.get('http://127.0.0.1:8000/api/monthly/', {
@@ -32,7 +32,7 @@ export const fetchMonthly = createAsyncThunk(
 export const addMonthly = createAsyncThunk(
     'monthly/addMonthly',
     async ({ date, type, category, amount, email, name }, { dispatch }) => {
-        if (!email) throw new Error('User email is required');
+        // if (!email) throw new Error('User email is required');
 
         try {
             await axios({

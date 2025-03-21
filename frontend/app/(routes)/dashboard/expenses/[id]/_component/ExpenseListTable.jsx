@@ -27,11 +27,12 @@ function ExpenseListTable({ budgetId, refreshData }) {
 	}, [expensesList]);
 
 	const filteredExpenses = budgetId
-		? expensesList.filter(
-				(expense) => expense.budgetId === parseInt(budgetId, 10)
-		  )
+		? expensesList.filter((expense) => {
+			console.log('Expense Budget ID:', expense.budget); // Debugging budgetId for each expense
+			return expense.budget === parseInt(budgetId, 10);
+		})
 		: expensesList;
-
+	console.log('budgetId', budgetId)
 	const handleDelete = async (expense) => {
 		const confirmDelete = window.confirm(
 			`Are you sure you want to delete "${expense.name}"?`
@@ -65,7 +66,7 @@ function ExpenseListTable({ budgetId, refreshData }) {
 								<th className="p-3 font-semibold min-w-[150px]">Name</th>
 								<th className="p-3 font-semibold min-w-[100px]">Amount</th>
 								<th className="p-3 font-semibold min-w-[100px]">Category</th>
-								<th className="p-3 font-semibold min-w-[150px]">Date</th>
+								<th className="p-3 font-semibold min-w-[150px]">Date & Time</th>
 								<th className="p-3 font-semibold min-w-[100px] text-center">
 									Action
 								</th>
@@ -87,7 +88,16 @@ function ExpenseListTable({ budgetId, refreshData }) {
 										{expense.category}
 									</td>
 									<td className="p-3 text-gray-800 dark:text-gray-200">
-										{expense.createdAt}
+										{expense.created_at
+											? `${new Date(expense.created_at).toLocaleDateString('da-DK', {
+												year: 'numeric',
+												month: '2-digit',
+												day: '2-digit',
+											})} ${new Date(expense.created_at).toLocaleTimeString('da-DK', {
+												hour: '2-digit',
+												minute: '2-digit',
+											})}`
+											: 'N/A'}
 									</td>
 									<td className="p-3 text-center">
 										<button
