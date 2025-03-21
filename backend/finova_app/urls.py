@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import MonthlyRecordViewSet, IncomeForecastView, ExpenseForecastView, MonthlyRecordDeleteView, MonthlyRecordUpdateView, BudgetListCreateView, BudgetDetailView, ExpenseListCreateView, ExpenseDetailView, TaskListCreateView, TaskDetailView
+from .views import MonthlyRecordViewSet, IncomeForecastView, ExpenseForecastView, MonthlyRecordDeleteView, MonthlyRecordUpdateView, BudgetListCreateView, BudgetDetailView, ExpenseListCreateView, ExpenseDetailView, TaskListCreateView, TaskDetailView, FinancialAdviceView
 
 urlpatterns = [
      # Budget endpoints
@@ -20,4 +20,5 @@ urlpatterns = [
     path('forecast-expenses/', ExpenseForecastView.as_view(), name='forecast_expenses'),
     path('forecast-income/', IncomeForecastView.as_view(), name='forecast_income'),
    
+    path("financial-advice/", FinancialAdviceView.as_view(), name="financial-advice"),
 ]
