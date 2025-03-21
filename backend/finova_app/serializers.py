@@ -7,9 +7,12 @@ class MonthlyRecordSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class BudgetSerializer(serializers.ModelSerializer):
+    totalSpend = serializers.FloatField(read_only=True)  # Read-only field for totalSpend
+    totalItem = serializers.IntegerField(read_only=True)  # Read-only field for totalItem
+
     class Meta:
         model = Budget
-        fields = '__all__'
+        fields = ['id', 'name', 'amount', 'currency', 'icon', 'created_by', 'totalSpend', 'totalItem']
 
 
 class ExpenseSerializer(serializers.ModelSerializer):

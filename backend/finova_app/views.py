@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import MonthlyRecord, Budget, Expense, Task
 from .serializers import MonthlyRecordSerializer, BudgetSerializer, ExpenseSerializer, TaskSerializer
 from .ml import forecast_next_six_months_income, forecast_next_six_months_expenses
+from django.db.models import Sum, Count
 
 
 # Budget Views
@@ -14,7 +15,10 @@ class BudgetListCreateView(generics.ListCreateAPIView):
     def get_queryset(self):
         user_email = self.request.query_params.get('email')
         if user_email:
-            return Budget.objects.filter(created_by=user_email)
+           return Budget.objects.filter(created_by=user_email).annotate(
+                totalSpend=Sum('expenses__amount'),  # Sum of all related expenses' amounts
+                totalItem=Count('expenses')         # Count of all related expenses
+            )
         return Budget.objects.none()
 
 
