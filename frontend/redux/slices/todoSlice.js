@@ -23,10 +23,13 @@ export const addTasks = createAsyncThunk(
     'tasks/addTasks',
     async ({ date, title, status, description, email }, { dispatch }) => {
         try {
+            // Format the date to YYYY-MM-DD
+            const formattedDate = moment(date).format('YYYY-MM-DD');
+
             const response = await axios.post('http://127.0.0.1:8000/api/tasks/', {
-                date,
+                date: formattedDate, // Use the formatted date
                 title,
-                created_at: moment().format('YYYY-MM-DD'),
+                created_at: moment().toISOString(), // Keep created_at as ISO format
                 status,
                 description,
                 created_by: email,
