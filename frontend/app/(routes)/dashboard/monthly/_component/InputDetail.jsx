@@ -141,8 +141,11 @@ function InputDetail() {
 			<Dialog>
 				<DialogTrigger asChild>
 					<div className=" cursor-pointer w-full ">
-						<button className="btn-grad w-full shadow-lg">
-							Add Income or Expense
+						<button
+							className="round w-full h-12 bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-green-500 hover:via-blue-600 hover:to-purple-700 transition-all duration-300 truncate"
+							title="Add Income or Expense" // Tooltip for full text
+						>
+							Add
 						</button>
 					</div>
 				</DialogTrigger>
@@ -274,10 +277,11 @@ function InputDetail() {
 				<DialogTrigger asChild>
 					<div className=" cursor-pointer w-full ">
 						<button
-							className="btn-grad w-full shadow-lg"
+							className="round w-full h-12 bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-green-500 hover:via-blue-600 hover:to-purple-700 transition-all duration-300 truncate"
 							onClick={() => setIsDialogOpen(true)}
+							title="Upload CSV or JSON file" // Tooltip for full text
 						>
-							Upload CSV or JSON file
+							Upload
 						</button>
 					</div>
 				</DialogTrigger>

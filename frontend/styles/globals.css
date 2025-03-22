@@ -136,15 +136,15 @@ html {
 			var(--btn-grad-middle) 51%,
 			var(--btn-grad-end) 100%
 		);
-		padding: 10px 20px;
+		padding: 0.75rem 1.5rem;
 		text-align: center;
 		text-transform: uppercase;
 		transition: 0.5s;
 		background-size: 200% auto;
-		color: white;
+		color: rgb(201, 45, 45);
 		border-radius: 10px;
 		display: block;
-		@apply sm:px-6 sm:py-3 md:px-8 md:py-4 lg:px-10 lg:py-5;
+		
 	}
 
 	.btn-grad:hover {
@@ -152,7 +152,6 @@ html {
 		color: #fff;
 		text-decoration: none;
 	}
-
 	.btn-delete {
 		background-image: linear-gradient(
 			to right,
