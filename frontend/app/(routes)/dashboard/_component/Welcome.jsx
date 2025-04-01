@@ -179,7 +179,6 @@ function Welcome({ budgetList }) {
 						alt="Logo"
 						width={250}
 						height={200}
-						layout="intrinsic"
 					/>
 				</div>
 			</div>

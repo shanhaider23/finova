@@ -142,10 +142,9 @@ export const SideNavItem = ({
 			{isSidebarExpanded ? (
 				<TransitionLink href={path}>
 					<h2
-						className={`flex gap-2 items-center text-gray-900 font-medium p-5 cursor-pointer round hover:text-primary hover:bg-blue-100 mb-2 transition-all dark:hover:bg-blue-600 dark:text-gray-300 dark:hover:text-white ${
-							path === active &&
+						className={`flex gap-2 items-center text-gray-900 font-medium p-5 cursor-pointer round hover:text-primary hover:bg-blue-100 mb-2 transition-all dark:hover:bg-blue-600 dark:text-gray-300 dark:hover:text-white ${path === active &&
 							' bg-blue-100 dark:bg-blue-600 text-black dark:text-white round'
-						}`}
+							}`}
 					>
 						{icon}
 						{label}
@@ -157,10 +156,9 @@ export const SideNavItem = ({
 						<TooltipTrigger>
 							<Link href={path}>
 								<h2
-									className={`flex gap-2  items-center text-gray-500 font-medium p-2 cursor-pointer round  hover:text-primary hover:bg-blue-100 mb-2 transition-all dark:hover:bg-blue-600 dark:text-gray-300 dark:hover:text-white ${
-										path === active &&
+									className={`flex gap-2  items-center text-gray-500 font-medium p-2 cursor-pointer round  hover:text-primary hover:bg-blue-100 mb-2 transition-all dark:hover:bg-blue-600 dark:text-gray-300 dark:hover:text-white ${path === active &&
 										' bg-blue-100 dark:bg-blue-600 text-black dark:text-white'
-									}`}
+										}`}
 								>
 									{icon}
 								</h2>

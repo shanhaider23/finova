@@ -20,7 +20,7 @@ function Breadcrumbs() {
 			<Breadcrumb>
 				<BreadcrumbList className="flex items-center text-sm font-semibold">
 					<BreadcrumbItem>
-						<BreadcrumbLink>
+						<BreadcrumbLink asChild>
 							<Link href="/" className="hover:underline">
 								Home
 							</Link>

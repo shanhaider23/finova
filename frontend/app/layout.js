@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
             <meta name="theme-color" content="#2c095d" />
             <link rel="apple-touch-icon" href="/icon-192x192.png" />
           </Head>
-          <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <body suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
             <Toaster />
             <AppContent>{children}</AppContent> {/* 👈 Move logic into a child component */}
             <Analytics />
