@@ -2,7 +2,7 @@ export const predefinedCategories = [
     'Food',
     'Transport',
     'Entertainment',
-    'Bills',
+    'Utility Bills',
     'Shopping',
     'Car Insurance',
     'Mobile Phone Bill',
