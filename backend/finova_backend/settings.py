@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-r@9o71%h#(1_9sc-hm2j475nzzfv5xg%(x*dx-3dy(y4=(mwd1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
+ALLOWED_HOSTS = ["finova-rhv6.onrender.com", "localhost", "127.0.0.1"]
 
 
 
@@ -89,7 +89,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-ALLOWED_HOSTS = ["finova-rhv6.onrender.com", "localhost", "127.0.0.1"]
 
 if not OPENAI_API_KEY:
     raise ValueError("⚠️ OPENAI_API_KEY is missing! Set it in the .env file.")
