@@ -48,7 +48,21 @@ function InputDetail() {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const dispatch = useDispatch();
 	const { user } = useUser();
+	const fileInputRef = useRef(null);
 
+	const filteredCategories = predefinedCategories.filter((item) => {
+		if (type === 'income') {
+			return (
+				item.includes('Income') || // Include income-related categories
+				item.includes('Salary') ||
+				item.includes('Bonus') ||
+				item.includes('Earnings')
+			);
+		} else if (type === 'expense') {
+			return !item.includes('Income'); // Exclude income-related categories
+		}
+		return false; // Return an empty list if no type is selected
+	});
 	const handleInputDetail = async () => {
 		const email = user?.primaryEmailAddress?.emailAddress;
 
@@ -72,8 +86,6 @@ function InputDetail() {
 		setName('');
 		setLoading(false);
 	};
-
-	const fileInputRef = useRef(null);
 
 	const handleFileUpload = (event) => {
 		const file = event.target.files[0];
@@ -212,9 +224,9 @@ function InputDetail() {
 													heading="Suggestions"
 													className=" overflow-y-auto"
 												>
-													{predefinedCategories.map((item) => (
+													{filteredCategories.map((item, index) => (
 														<CommandItem
-															key={item}
+															key={index}
 															onSelect={() => setCategory(item)}
 														>
 															{item}
