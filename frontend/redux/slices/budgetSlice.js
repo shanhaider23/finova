@@ -10,7 +10,6 @@ export const fetchBudgets = createAsyncThunk('budgets/fetchBudgets', async (emai
         const response = await axios.get(`${apiBaseUrl}/api/budgets/`, {
             params: { email },
         });
-        console.log('Fetched budgets:', response.data); // Debugging line
         return response.data;
     } catch (error) {
         console.error('Error fetching budgets:', error);

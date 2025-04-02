@@ -28,11 +28,9 @@ function ExpenseListTable({ budgetId, refreshData }) {
 
 	const filteredExpenses = budgetId
 		? expensesList.filter((expense) => {
-			console.log('Expense Budget ID:', expense.budget); // Debugging budgetId for each expense
 			return expense.budget === parseInt(budgetId, 10);
 		})
 		: expensesList;
-	console.log('budgetId', budgetId)
 	const handleDelete = async (expense) => {
 		const confirmDelete = window.confirm(
 			`Are you sure you want to delete "${expense.name}"?`

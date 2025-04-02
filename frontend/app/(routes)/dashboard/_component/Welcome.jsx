@@ -39,8 +39,6 @@ function Welcome({ budgetList }) {
 			setCurrency(budget.currency);
 			total_budget += Number(budget.amount);
 			total_spend += budget.totalSpend;
-			console.log(budget.totalSpend, 'totalSpend');
-			console.log(budget, 'amount');
 		});
 		setTotalBudget(total_budget);
 		setTotalSpend(total_spend);

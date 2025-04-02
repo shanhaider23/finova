@@ -63,7 +63,7 @@ export const addMonthly = createAsyncThunk(
 export const deleteMonthly = createAsyncThunk(
     'monthly/deleteMonthly',
     async ({ monthlyId, email }, { dispatch }) => {
-        console.log('monthlyId', monthlyId);
+
         try {
             await axios.delete(`${apiBaseUrl}/api/monthly/${monthlyId}/delete/`);
 
