@@ -4,13 +4,15 @@ import moment from 'moment';
 import { toast } from 'sonner';
 
 // **Fetch Monthly Data from Database**
+
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 export const fetchMonthly = createAsyncThunk(
     'monthly/fetchMonthly',
     async (email) => {
         // if (!email) throw new Error('User email is required');
         try {
             // Fetch data from Django backend
-            const response = await axios.get('http://127.0.0.1:8000/api/monthly/', {
+            const response = await axios.get(`${apiBaseUrl}/api/monthly/`, {
                 params: { email },
             });
 
@@ -37,7 +39,7 @@ export const addMonthly = createAsyncThunk(
         try {
             await axios({
                 method: 'post',
-                url: `http://127.0.0.1:8000/api/monthly/`,
+                url: `${apiBaseUrl}/api/monthly/`,
                 data: {
                     date: moment(date).format('YYYY-MM-DD') || moment().format('YYYY-MM-DD'),
                     type,
@@ -63,7 +65,7 @@ export const deleteMonthly = createAsyncThunk(
     async ({ monthlyId, email }, { dispatch }) => {
         console.log('monthlyId', monthlyId);
         try {
-            await axios.delete(`http://127.0.0.1:8000/api/monthly/${monthlyId}/delete/`);
+            await axios.delete(`${apiBaseUrl}/api/monthly/${monthlyId}/delete/`);
 
             toast.success('Monthly Record Deleted');
             dispatch(fetchMonthly(email));
@@ -81,7 +83,7 @@ export const updateMonthly = createAsyncThunk(
     'monthly/updateMonthly',
     async ({ id, amount, category, name, email }, { dispatch }) => {
         try {
-            const response = await axios.put(`http://127.0.0.1:8000/api/monthly/${id}/update/`, {
+            const response = await axios.put(`${apiBaseUrl}/api/monthly/${id}/update/`, {
                 amount,
                 category,
                 name,

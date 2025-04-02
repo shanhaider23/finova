@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'sonner';
-
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 // **Fetch budgets from Django API**
 export const fetchBudgets = createAsyncThunk('budgets/fetchBudgets', async (email) => {
+
+
     try {
-        const response = await axios.get('http://127.0.0.1:8000/api/budgets/', {
+        const response = await axios.get(`${apiBaseUrl}/api/budgets/`, {
             params: { email },
         });
         console.log('Fetched budgets:', response.data); // Debugging line
@@ -21,7 +23,7 @@ export const createBudget = createAsyncThunk(
     'budgets/createBudget',
     async ({ name, amount, currency, email, emojiIcon }) => {
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/budgets/', {
+            const response = await axios.post(`${apiBaseUrl}/api/budgets/`, {
                 name,
                 amount,
                 currency,
@@ -46,7 +48,7 @@ export const editBudget = createAsyncThunk(
     'budgets/editBudget',
     async ({ budgetId, name, amount, emojiIcon }) => {
         try {
-            const response = await axios.put(`http://127.0.0.1:8000/api/budgets/${budgetId}/`, {
+            const response = await axios.put(`${apiBaseUrl}/api/budgets/${budgetId}/`, {
                 name,
                 amount,
                 icon: emojiIcon,
@@ -69,7 +71,7 @@ export const deleteBudget = createAsyncThunk(
     'budgets/deleteBudget',
     async (budgetId) => {
         try {
-            await axios.delete(`http://127.0.0.1:8000/api/budgets/${budgetId}/`);
+            await axios.delete(`${apiBaseUrl}/api/budgets/${budgetId}/`);
 
             toast.success('Budget Deleted');
             return budgetId; // Return the deleted budget ID to remove it from Redux state

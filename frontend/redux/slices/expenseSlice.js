@@ -2,14 +2,13 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import moment from 'moment';
 import { toast } from 'sonner';
-
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 // **Fetch Expenses from Django API**
 export const fetchExpenses = createAsyncThunk('expenses/fetchExpenses', async (email) => {
   try {
-    const response = await axios.get('http://127.0.0.1:8000/api/expenses/', {
+    const response = await axios.get(`${apiBaseUrl}/api/expenses/`, {
       params: { email },
     });
-    console.log('Fetched expenses:', response.data); // Debugging line
     return response.data;
   } catch (error) {
     console.error('Error fetching expenses:', error);
@@ -22,7 +21,7 @@ export const addExpense = createAsyncThunk(
   'expenses/addExpense',
   async ({ name, amount, budgetId, category, email }, { dispatch }) => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/expenses/', {
+      const response = await axios.post(`${apiBaseUrl}/api/expenses/`, {
         name,
         amount,
         budget: budgetId,
@@ -48,7 +47,7 @@ export const deleteExpense = createAsyncThunk(
   'expenses/deleteExpense',
   async ({ expenseId, email }, { dispatch }) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/expenses/${expenseId}/`);
+      await axios.delete(`${apiBaseUrl}/api/expenses/${expenseId}/`);
       toast.success('Expense Deleted');
 
       // Refresh expenses after deletion

@@ -3,12 +3,13 @@ import axios from 'axios';
 import moment from 'moment';
 import { toast } from 'sonner';
 
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 // **Fetch All Tasks**
 export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (email) => {
     if (!email) throw new Error('User email is required');
 
     try {
-        const response = await axios.get('http://127.0.0.1:8000/api/tasks/', {
+        const response = await axios.get(`${apiBaseUrl}/api/tasks/`, {
             params: { email },
         });
         return response.data;
@@ -26,7 +27,7 @@ export const addTasks = createAsyncThunk(
             // Format the date to YYYY-MM-DD
             const formattedDate = moment(date).format('YYYY-MM-DD');
 
-            const response = await axios.post('http://127.0.0.1:8000/api/tasks/', {
+            const response = await axios.post(`${apiBaseUrl}/api/tasks/`, {
                 date: formattedDate, // Use the formatted date
                 title,
                 created_at: moment().toISOString(), // Keep created_at as ISO format
@@ -53,7 +54,7 @@ export const updateTask = createAsyncThunk(
     'tasks/updateTask',
     async ({ id, status, email }, { dispatch }) => {
         try {
-            const response = await axios.put(`http://127.0.0.1:8000/api/tasks/${id}/`, {
+            const response = await axios.put(`${apiBaseUrl}/api/tasks/${id}/`, {
                 status,
             });
 
@@ -75,7 +76,7 @@ export const deleteTasks = createAsyncThunk(
     'tasks/deleteTasks',
     async ({ taskId, email }, { dispatch }) => {
         try {
-            await axios.delete(`http://127.0.0.1:8000/api/tasks/${taskId}/`);
+            await axios.delete(`${apiBaseUrl}/api/tasks/${taskId}/`);
             toast.success('Task Deleted');
             dispatch(fetchTasks(email)); // Refresh task list
             return taskId;
