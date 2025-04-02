@@ -9,16 +9,12 @@ import { addMonthly } from '@/redux/slices/monthlySlice';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
+
 import { predefinedCategories } from '@/lib/categories';
 import { Calendar } from '@/components/ui/calendar';
 import { useRef } from 'react';
 import Papa from 'papaparse';
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from '@/components/ui/popover';
+
 import {
 	Command,
 	CommandEmpty,
@@ -26,18 +22,9 @@ import {
 	CommandInput,
 	CommandItem,
 	CommandList,
-	CommandSeparator,
-	CommandShortcut,
+
 } from '@/components/ui/command';
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
+
 import {
 	Dialog,
 	DialogClose,
@@ -72,7 +59,11 @@ function InputDetail() {
 
 		setLoading(true);
 
-		dispatch(addMonthly({ date, type, name, category, amount, email }));
+		// Dispatch the action to add the new data
+		await dispatch(addMonthly({ date, type, name, category, amount, email }));
+
+		// Re-fetch the updated data
+		await dispatch(fetchMonthly(email));
 
 		setDate('');
 		setType('');

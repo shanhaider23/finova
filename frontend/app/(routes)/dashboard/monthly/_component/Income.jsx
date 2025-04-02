@@ -66,6 +66,8 @@ function MonthlyIncome({ month, year }) {
 	};
 
 	const handleUpdate = async (id) => {
+		const email = user?.primaryEmailAddress?.emailAddress;
+
 		await dispatch(
 			updateMonthly({
 				id,
@@ -74,6 +76,10 @@ function MonthlyIncome({ month, year }) {
 				name: editValues.name,
 			})
 		);
+
+		// Re-fetch the updated data
+		await dispatch(fetchMonthly(email));
+
 		setEditId(null);
 	};
 
@@ -81,9 +87,14 @@ function MonthlyIncome({ month, year }) {
 		setEditId(null);
 	};
 
-	const handleDelete = (id) => {
+	const handleDelete = async (id) => {
+		const email = user?.primaryEmailAddress?.emailAddress;
+
 		if (window.confirm('Are you sure you want to delete this record?')) {
-			dispatch(deleteMonthly({ monthlyId: id }));
+			await dispatch(deleteMonthly({ monthlyId: id }));
+
+			// Re-fetch the updated data
+			await dispatch(fetchMonthly(email));
 		}
 	};
 	const COLORS = [
