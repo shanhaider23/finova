@@ -112,17 +112,24 @@ function InputDetail() {
 
 		const email = user?.primaryEmailAddress?.emailAddress;
 
+		let hasError = false;
+
 		data.forEach((item) => {
 			const { date, type, name, category, amount } = item;
 			if (!date || !type || !name || !category || !amount) {
-				toast.error('Missing required fields in file.');
+				hasError = true; // Flag an error if any item is invalid
 				return;
 			}
 
 			dispatch(addMonthly({ date, type, name, category, amount, email }));
 		});
 
-		toast.success('Data successfully added!');
+		if (hasError) {
+			toast.error('Some items in the file were missing required fields.');
+		} else {
+			toast.success('Data successfully added!');
+		}
+
 		setLoading(false);
 		setIsDialogOpen(false);
 	};
