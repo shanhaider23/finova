@@ -60,6 +60,9 @@ CORS_ALLOWED_ORIGINS = [
     'https://finova-psi.vercel.app',
     'https://finova-rhv6.onrender.com',
     'https://finova.dk',
+    'https://www.finova.dk',
+    'https://finova.dk/dashboard',
+    'https://www.finova.dk/dashboard',
 ]
 ROOT_URLCONF = 'finova_backend.urls'
 
