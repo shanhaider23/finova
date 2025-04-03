@@ -76,24 +76,23 @@ function InputDetail() {
 
 		setLoading(true);
 
-		try {
-			// Dispatch the action to add the new data
-			await dispatch(addMonthly({ date, type, name, category, amount, email }));
 
-			// Re-fetch the updated data
-			await dispatch(fetchMonthly(email));
+		// Dispatch the action to add the new data
+		await dispatch(addMonthly({ date, type, name, category, amount, email }));
 
-			toast.success("Data successfully added!")
-		} catch (error) {
-			toast.error("Failed to add data.")
-		} finally {
-			setDate('');
-			setType('');
-			setCategory('');
-			setAmount('');
-			setName('');
-			setLoading(false);
-		}
+		// Re-fetch the updated data
+		await dispatch(fetchMonthly(email));
+
+		toast.success("Data successfully added!")
+
+
+		setDate('');
+		setType('');
+		setCategory('');
+		setAmount('');
+		setName('');
+		setLoading(false);
+
 	};
 
 	const handleFileUpload = (event) => {

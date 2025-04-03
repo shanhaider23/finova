@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-r@9o71%h#(1_9sc-hm2j475nzzfv5xg%(x*dx-3dy(y4=(mwd1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["finova-rhv6.onrender.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["finova-rhv6.onrender.com", "reliable-youth-production.up.railway.app", "localhost", "127.0.0.1"]
 
 
 
@@ -61,7 +61,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://finova-rhv6.onrender.com',  # Backend domain
     'https://finova.dk',  # Main domain
     'https://www.finova.dk',  # Main domain with www
-
+    'https://reliable-youth-production.up.railway.app/'
 ]
 ROOT_URLCONF = 'finova_backend.urls'
 
