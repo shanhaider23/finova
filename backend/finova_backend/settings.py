@@ -61,7 +61,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://finova-rhv6.onrender.com',  # Backend domain
     'https://finova.dk',  # Main domain
     'https://www.finova.dk',  # Main domain with www
-    'https://reliable-youth-production.up.railway.app/'
+    'https://reliable-youth-production.up.railway.app'
 ]
 ROOT_URLCONF = 'finova_backend.urls'
 
