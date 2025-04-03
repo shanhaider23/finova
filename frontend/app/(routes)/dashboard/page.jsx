@@ -29,6 +29,7 @@ function Dashboard({ params: paramsPromise }) {
 	} = useSelector((state) => state.expenses);
 	const { list: monthlyList } = useSelector((state) => state.monthly);
 
+
 	useEffect(() => {
 		if (!isSignedIn) {
 			router.push('/sign-in');
@@ -48,10 +49,20 @@ function Dashboard({ params: paramsPromise }) {
 		const fetchData = async () => {
 			try {
 				const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+				if (!user || !user.primaryEmailAddress?.emailAddress) {
+					console.error("User email is not available");
+					return;
+				}
 
+				const email = user.primaryEmailAddress.emailAddress;
+				console.log("User email:", email); // Log the email to check if it's correct
 				const [incomeResponse, expenseResponse] = await Promise.all([
-					axios.get(`${apiBaseUrl}/api/forecast-income/`),
-					axios.get(`${apiBaseUrl}/api/forecast-expenses/`),
+					axios.get(`${apiBaseUrl}/api/forecast-income/`, {
+						params: { email }, // Pass email as a query parameter
+					}),
+					axios.get(`${apiBaseUrl}/api/forecast-expenses/`, {
+						params: { email }, // Pass email as a query parameter
+					}),
 
 				]);
 

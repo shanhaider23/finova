@@ -2,19 +2,36 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Charts from './Charts';
+import { useUser } from '@clerk/nextjs'; // Import Clerk's useUser hook
+
 
 export default function FinancialForecastCharts() {
     const [data, setData] = useState([]);
+    const { user } = useUser();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+                if (!user || !user.primaryEmailAddress?.emailAddress) {
+                    console.error("User email is not available");
+                    return;
+                }
+
+                const email = user.primaryEmailAddress.emailAddress;
+                console.log("User email:", email); // Log the email to check if it's correct
+                // Fetch data from the APIs with the email parameter
                 const [incomeResponse, expenseResponse, monthlyResponse] = await Promise.all([
-                    axios.get(`${apiBaseUrl}/api/forecast-income/`),
-                    axios.get(`${apiBaseUrl}/api/forecast-expenses/`),
-                    axios.get(`${apiBaseUrl}/api/monthly/`),
+                    axios.get(`${apiBaseUrl}/api/forecast-income/`, {
+                        params: { email }, // Pass email as a query parameter
+                    }),
+                    axios.get(`${apiBaseUrl}/api/forecast-expenses/`, {
+                        params: { email }, // Pass email as a query parameter
+                    }),
+                    axios.get(`${apiBaseUrl}/api/monthly/`, {
+                        params: { email }, // Pass email as a query parameter
+                    }),
                 ]);
 
                 if (!incomeResponse.data.next_six_month_income_prediction ||
