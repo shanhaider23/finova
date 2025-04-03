@@ -72,16 +72,16 @@ class MonthlyRecordViewSet(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user_email = self.request.query_params.get('email')
-        print(f"User email from request: {user_email}")  # Debugging line
+        
         if user_email:
            records = MonthlyRecord.objects.filter(created_by=user_email)
-           print(f"Filtered records: {records.values()}")  # Logging line
+          
            return records
         return MonthlyRecord.objects.none()
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
-        print(f"Serialized Data: {serializer.data}")  # Logging line
+        
         return Response(serializer.data)
     
 class MonthlyRecordDeleteView(generics.DestroyAPIView):
@@ -116,7 +116,7 @@ class IncomeForecastView(APIView):
     def get(self, request):
         # Get the user email from query parameters
         user_email = request.query_params.get('email')
-        print(f"Received email: {user_email}")  # Debugging line
+        
         if not user_email:
             return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
 

@@ -7,7 +7,7 @@ from .models import MonthlyRecord
 def forecast_next_six_months_income(user_email):
     # Load data from the database, filtered by created_by
     incomes = MonthlyRecord.objects.filter(type='income', created_by=user_email).order_by('date')
-    print(f"Incomes data from database: {list(incomes.values('date', 'amount'))}")  # Debugging line
+    
     if incomes.count() < 2:
         return "Not enough data"
 
