@@ -4,10 +4,10 @@ from sklearn.linear_model import LinearRegression
 from datetime import datetime
 from .models import MonthlyRecord
 
-def forecast_next_six_months_income():
-    # Load data from the database
-    incomes = MonthlyRecord.objects.filter(type='income').order_by('date')
-    print(f"Incomes data from database: {list(incomes.values('date', 'amount'))}")  # Debugging line
+def forecast_next_six_months_income(user_email):
+    # Load data from the database, filtered by created_by
+    incomes = MonthlyRecord.objects.filter(type='income', created_by=user_email).order_by('date')
+    
     if incomes.count() < 2:
         return "Not enough data"
 
@@ -50,9 +50,9 @@ def forecast_next_six_months_income():
 
     return forecast
 
-def forecast_next_six_months_expenses():
-    # Load data from the database
-    expenses = MonthlyRecord.objects.filter(type='expense').order_by('date')
+def forecast_next_six_months_expenses(user_email):
+    # Load data from the database, filtered by created_by
+    expenses = MonthlyRecord.objects.filter(type='expense', created_by=user_email).order_by('date')
 
     if expenses.count() < 2:
         return "Not enough data"

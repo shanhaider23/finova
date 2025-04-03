@@ -66,15 +66,24 @@ class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TaskSerializer
 
 # List all income entries or add new income data
+
 class MonthlyRecordViewSet(generics.ListCreateAPIView):
     serializer_class = MonthlyRecordSerializer
 
     def get_queryset(self):
         user_email = self.request.query_params.get('email')
+        
         if user_email:
-            return MonthlyRecord.objects.filter(created_by=user_email)
+           records = MonthlyRecord.objects.filter(created_by=user_email)
+          
+           return records
         return MonthlyRecord.objects.none()
-
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        
+        return Response(serializer.data)
+    
 class MonthlyRecordDeleteView(generics.DestroyAPIView):
     queryset = MonthlyRecord.objects.all()
     serializer_class = MonthlyRecordSerializer
@@ -105,17 +114,37 @@ class MonthlyRecordUpdateView(generics.UpdateAPIView):
 # Forecast API
 class IncomeForecastView(APIView):
     def get(self, request):
-        prediction = forecast_next_six_months_income()
+        # Get the user email from query parameters
+        user_email = request.query_params.get('email')
+        
+        if not user_email:
+            return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Pass the user email to the forecast function
+        prediction = forecast_next_six_months_income(user_email)
+        
         if prediction == "Not enough data":
             return Response({"error": "Not enough data to make a forecast."}, status=status.HTTP_400_BAD_REQUEST)
+        
         return Response({"next_six_month_income_prediction": prediction}, status=status.HTTP_200_OK)
+
 
 class ExpenseForecastView(APIView):
     def get(self, request):
-        forecast = forecast_next_six_months_expenses()
+        # Get the user email from query parameters
+        user_email = request.query_params.get('email')
+
+        if not user_email:
+            return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Pass the user email to the forecast function
+        forecast = forecast_next_six_months_expenses(user_email)
+        
         if forecast == "Not enough data":
             return Response({"error": "Not enough data to make a forecast."}, status=status.HTTP_400_BAD_REQUEST)
+        
         return Response({"next_six_months_expense_forecast": forecast}, status=status.HTTP_200_OK)
+
 
 
 

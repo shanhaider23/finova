@@ -45,7 +45,7 @@ def generate_financial_advice(prompt, user_input=None):
         )
         
         # Debugging step: print the entire response to understand its structure
-        print("Response from OpenAI:", response)
+        
 
         # Access the message content
         response_message = response.choices[0].message.content
