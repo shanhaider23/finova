@@ -55,14 +55,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'https://finova-psi.vercel.app',
-    'https://finova-rhv6.onrender.com',
-    'https://finova.dk',
-    'https://www.finova.dk',
-    'https://finova.dk/dashboard',
-    'https://www.finova.dk/dashboard',
+    'http://localhost:3000',  # Local development
+    'http://127.0.0.1:3000',  # Local development
+    'https://finova-psi.vercel.app',  # Production frontend
+    'https://finova-rhv6.onrender.com',  # Backend domain
+    'https://finova.dk',  # Main domain
+    'https://www.finova.dk',  # Main domain with www
+
 ]
 ROOT_URLCONF = 'finova_backend.urls'
 
