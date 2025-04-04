@@ -55,7 +55,7 @@ function Dashboard({ params: paramsPromise }) {
 				}
 
 				const email = user.primaryEmailAddress.emailAddress;
-				console.log("User email:", email); // Log the email to check if it's correct
+
 				const [incomeResponse, expenseResponse] = await Promise.all([
 					axios.get(`${apiBaseUrl}/api/forecast-income/`, {
 						params: { email }, // Pass email as a query parameter
