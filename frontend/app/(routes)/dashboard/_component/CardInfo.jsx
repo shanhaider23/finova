@@ -19,7 +19,7 @@ function CardInfo({ data, name, color }) {
 						{label}
 					</p>
 					<p className="text-blue-500 dark:text-blue-400">
-						Amount: ${payload[0].value.toLocaleString()}
+						Amount: {payload[0].value.toLocaleString()}
 					</p>
 				</div>
 			);

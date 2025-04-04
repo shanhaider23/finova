@@ -4,23 +4,27 @@ import axios from 'axios';
 import Charts from './Charts';
 import { useUser } from '@clerk/nextjs'; // Import Clerk's useUser hook
 
-
 export default function FinancialForecastCharts() {
     const [data, setData] = useState([]);
-    const { user } = useUser();
+    const [isLoading, setIsLoading] = useState(true); // Add a loading state
+    const { user, isLoaded } = useUser(); // Use `isLoaded` to check if the user object is ready
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+                if (!isLoaded) {
+                    console.error("User is not loaded yet"); // Debugging line
+                    return;
+                }
 
                 if (!user || !user.primaryEmailAddress?.emailAddress) {
                     console.error("User email is not available");
                     return;
                 }
 
+                const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
                 const email = user.primaryEmailAddress.emailAddress;
-                console.log("User email:", email); // Log the email to check if it's correct
+
                 // Fetch data from the APIs with the email parameter
                 const [incomeResponse, expenseResponse, monthlyResponse] = await Promise.all([
                     axios.get(`${apiBaseUrl}/api/forecast-income/`, {
@@ -100,14 +104,19 @@ export default function FinancialForecastCharts() {
                     return monthsOrder.indexOf(a.month) - monthsOrder.indexOf(b.month);
                 });
                 setData(sortedData);
-
             } catch (error) {
                 console.error('Error fetching data:', error);
+            } finally {
+                setIsLoading(false); // Set loading to false after data is fetched
             }
         };
 
         fetchData();
-    }, []);
+    }, [user, isLoaded]); // Add `isLoaded` as a dependency
+
+    if (isLoading) {
+        return <p>Loading...</p>; // Show a loading message while data is being fetched
+    }
 
     return (
         <div className="p-5 space-y-12">
