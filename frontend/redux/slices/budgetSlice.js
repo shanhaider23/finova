@@ -45,12 +45,15 @@ export const createBudget = createAsyncThunk(
 // **Edit Budget**
 export const editBudget = createAsyncThunk(
     'budgets/editBudget',
-    async ({ budgetId, name, amount, emojiIcon }) => {
+    async ({ budgetId, name, amount, emojiIcon, currency, created_by }) => {
+
         try {
             const response = await axios.put(`${apiBaseUrl}/api/budgets/${budgetId}/`, {
                 name,
                 amount,
                 icon: emojiIcon,
+                currency,
+                created_by,
             });
 
             if (response.data) {
@@ -69,11 +72,12 @@ export const editBudget = createAsyncThunk(
 export const deleteBudget = createAsyncThunk(
     'budgets/deleteBudget',
     async (budgetId) => {
+
         try {
-            await axios.delete(`${apiBaseUrl}/api/budgets/${budgetId}/`);
+            await axios.delete(`${apiBaseUrl}/api/budgets/${budgetId.budgetId}/`);
 
             toast.success('Budget Deleted');
-            return budgetId; // Return the deleted budget ID to remove it from Redux state
+            return budgetId.budgetId; // Return the deleted budget ID to remove it from Redux state
         } catch (error) {
             console.error('Error deleting budget:', error);
             toast.error('Failed to delete budget. Please try again.');

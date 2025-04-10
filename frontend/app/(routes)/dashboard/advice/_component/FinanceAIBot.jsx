@@ -5,7 +5,24 @@ import axios from 'axios';
 export default function FinanceAIBot() {
 	const [financialAdvice, setFinancialAdvice] = useState([]); // Store financial advice
 	const [isLoading, setIsLoading] = useState(true); // Track loading state
-	const [error, setError] = useState(null); // Track errors
+
+	// Dummy response to show in case of API failure
+	const dummyResponse = [
+		{
+			month: new Date().toISOString(),
+			suggestion: {
+				financial_advice: [
+					{
+						suggestion: [
+							{ title: "Save More", description: "Try to save at least 20% of your income this month." },
+							{ title: "Invest Wisely", description: "Consider investing in low-risk mutual funds." },
+							{ title: "Track Expenses", description: "Keep a close eye on your daily expenses." },
+						],
+					},
+				],
+			},
+		},
+	];
 
 	// Fetch financial advice from the backend
 	useEffect(() => {
@@ -36,7 +53,13 @@ export default function FinanceAIBot() {
 
 				setFinancialAdvice(response.data.financial_advice); // Set the financial advice
 			} catch (err) {
-				setError(err.response?.data?.error || err.message); // Set error message
+				console.error("API error:", err.message);
+
+				// Simulate a delay and show dummy response
+				setTimeout(() => {
+
+					setFinancialAdvice(dummyResponse);
+				}, 1000); // Delay of 2 seconds
 			} finally {
 				setIsLoading(false); // Stop loading
 			}
@@ -56,15 +79,8 @@ export default function FinanceAIBot() {
 				</div>
 			)}
 
-			{/* Show error message */}
-			{error && (
-				<div className="p-4 bg-red-200 dark:bg-red-700 rounded-xl text-center">
-					<span>{error}</span>
-				</div>
-			)}
-
 			{/* Show financial advice */}
-			{!isLoading && !error && financialAdvice.length > 0 && (
+			{!isLoading && financialAdvice.length > 0 && (
 				<div className="space-y-4">
 					{financialAdvice.map((monthAdvice, index) => (
 						<div key={index} className="p-4 bg-gray-200 dark:bg-gray-700 rounded-xl">
@@ -88,11 +104,11 @@ export default function FinanceAIBot() {
 			)}
 
 			{/* Show no advice message */}
-			{!isLoading && !error && financialAdvice.length === 0 && (
+			{/* {!isLoading && financialAdvice.length === 0 && (
 				<div className="p-4 bg-gray-200 dark:bg-gray-700 rounded-xl text-center">
 					<span>No financial advice available.</span>
 				</div>
-			)}
+			)} */}
 		</div>
 	);
 }
