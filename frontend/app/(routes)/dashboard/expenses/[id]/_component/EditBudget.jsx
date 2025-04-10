@@ -26,6 +26,7 @@ function EditBudget({ budgetInfo, refreshData }) {
 	const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
 	const [name, setName] = useState(budgetInfo?.name);
 	const [amount, setAmount] = useState(budgetInfo?.amount);
+	const [currency, setCurrency] = useState(budgetInfo?.currency);
 
 	const { user } = useUser();
 
@@ -36,7 +37,9 @@ function EditBudget({ budgetInfo, refreshData }) {
 				name,
 				amount,
 				emojiIcon,
-				email: user?.emailAddress,
+				currency,
+				created_by: budgetInfo.created_by,
+
 			})
 		);
 		refreshData();
@@ -94,6 +97,25 @@ function EditBudget({ budgetInfo, refreshData }) {
 										defaultValue={budgetInfo?.amount}
 										className="bg-input"
 									/>
+								</div>
+								<div className="mt-2">
+									<h2 className="text-black font-bold my-1 dark:text-gray-300">
+										Currency
+									</h2>
+									<select
+										value={currency}
+										onChange={(e) => setCurrency(e.target.value)}
+										defaultValue={budgetInfo?.currency}
+										className="w-full p-2 border rounded-md bg-input"
+									>
+										<option value="kr">🇩🇰 Danish Krone (kr)</option>
+										<option value="₨">🇵🇰 Pakistani Rupee (₨)</option>
+										<option value="$">🇺🇸 US Dollar ($)</option>
+										<option value="€">🇪🇺 Euro (€)</option>
+										<option value="£">🇬🇧 British Pound (£)</option>
+										<option value="₹">🇮🇳 Indian Rupee (₹)</option>
+									</select>
+
 								</div>
 							</div>
 						</DialogDescription>

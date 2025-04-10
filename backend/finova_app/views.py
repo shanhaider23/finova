@@ -153,8 +153,8 @@ class ExpenseForecastView(APIView):
 class FinancialAdviceView(APIView):
     def get(self, request, *args, **kwargs):
         # Get income & expense predictions
-        income_predictions = forecast_next_six_months_income()
-        expense_predictions = forecast_next_six_months_expenses()
+        income_predictions = forecast_next_six_months_income(user_email)
+        expense_predictions = forecast_next_six_months_expenses(user_email)
 
         # Generate a unique cache key based on the income and expense predictions
         # Convert predictions to a string to ensure consistency when checking equality
