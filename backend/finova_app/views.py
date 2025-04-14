@@ -152,10 +152,13 @@ class ExpenseForecastView(APIView):
 
 class FinancialAdviceView(APIView):
     def get(self, request, *args, **kwargs):
+        user_email = request.query_params.get('email')
+        print(f"User email: {user_email}")
         # Get income & expense predictions
         income_predictions = forecast_next_six_months_income(user_email)
         expense_predictions = forecast_next_six_months_expenses(user_email)
-
+        print(f"Income predictions: {income_predictions}")
+        print(f"Expense predictions: {expense_predictions}")
         # Generate a unique cache key based on the income and expense predictions
         # Convert predictions to a string to ensure consistency when checking equality
         predictions_str = json.dumps({
