@@ -25,40 +25,47 @@ function ExpenseComponent({ params }) {
 		}
 	}, [dispatch, user, params.id]);
 
-	if (loading) {
-		return (
-			<div>
-				<Loader />
-			</div>
-		);
-	}
-
-	if (error) {
-		return <div>Error: {error}</div>;
-	}
-
-	if (!expenseList || expenseList.length === 0) {
-		return <div>No expenses found.</div>;
-	}
 
 	return (
 		<div className="m-5">
 			<div className="flex justify-center items-center flex-col gap-5">
-				<div className="w-full grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1 gap-5 ">
-					<div className=" flex justify-center items-center shadow-lg bg-card p-5 ">
-						<PiChart expensesList={expenseList} />
+				{loading && (
+					<div className="flex justify-center items-center">
+						<Loader className="animate-spin" size={50} />
 					</div>
-					<div className="flex justify-center items-center shadow-lg bg-card p-5 ">
-						<ShapeChart expensesList={expenseList} />
+				)}
+
+				{!loading && error && (
+					<div className="text-red-500 text-center">
+						Error: {error}
 					</div>
-				</div>
-				<div className="w-full">
-					<ExpenseListTable
-						refreshData={() =>
-							dispatch(fetchExpenses(user.primaryEmailAddress.emailAddress))
-						}
-					/>
-				</div>
+				)}
+
+				{!loading && !error && (!expenseList || expenseList.length === 0) && (
+					<div className="text-gray-500 text-center">
+						No expenses found.
+					</div>
+				)}
+
+				{!loading && !error && expenseList?.length > 0 && (
+					<>
+						<div className="w-full grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1 gap-5">
+							<div className="flex justify-center items-center shadow-lg bg-card p-5">
+								<PiChart expensesList={expenseList} />
+							</div>
+							<div className="flex justify-center items-center shadow-lg bg-card p-5">
+								<ShapeChart expensesList={expenseList} />
+							</div>
+						</div>
+						<div className="w-full">
+							<ExpenseListTable
+								refreshData={() =>
+									dispatch(fetchExpenses(user.primaryEmailAddress.emailAddress))
+								}
+							/>
+						</div>
+					</>
+				)}
 			</div>
 		</div>
 	);

@@ -1,11 +1,16 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useUser } from '@clerk/nextjs'; // Import Clerk's useUser hook
+import { Loader } from 'lucide-react';
+
+
 
 export default function FinanceAIBot() {
 	const [financialAdvice, setFinancialAdvice] = useState([]); // Store financial advice
 	const [isLoading, setIsLoading] = useState(true); // Track loading state
 
+	const { user } = useUser();
 	// Dummy response to show in case of API failure
 	const dummyResponse = [
 		{
@@ -26,6 +31,7 @@ export default function FinanceAIBot() {
 
 	// Fetch financial advice from the backend
 	useEffect(() => {
+		const email = user.primaryEmailAddress.emailAddress;
 		const fetchFinancialAdvice = async () => {
 			try {
 				setIsLoading(true); // Start loading
@@ -43,7 +49,10 @@ export default function FinanceAIBot() {
 
 				// Use the API base URL from environment variables
 				const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
-				const response = await axios.get(`${apiBaseUrl}/api/financial-advice/`);
+				const response = await axios.get(`${apiBaseUrl}/api/financial-advice/`, {
+					params: { email },
+				});
+
 
 				// Cache the data with the current date
 				localStorage.setItem('financial_advice', JSON.stringify({
@@ -75,7 +84,7 @@ export default function FinanceAIBot() {
 			{/* Show loading state */}
 			{isLoading && (
 				<div className="p-4 bg-gray-200 dark:bg-gray-700 rounded-xl text-center">
-					<span>Loading financial advice...</span>
+					<Loader className="animate-spin" size={50} />
 				</div>
 			)}
 

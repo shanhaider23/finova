@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import CreateBudget from './CreateBudget';
-
+import { Loader } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import BudgetItem from './BudgetItem';
 import { useSelector, useDispatch } from 'react-redux';
@@ -28,19 +28,24 @@ function BudgetList() {
 			</div>
 			<div className="pl-5">
 				{loading ? (
-					<div>Loading...</div>
-				) : (
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-						{budgetList?.length > 0
-							? budgetList.map((budget) => (
-									<BudgetItem
-										key={budget.id}
-										budget={budget}
-										expensesList={expensesList} // Pass expensesList here
-									/>
-							  ))
-							: 'No budgets available'}
+					// Show a loader while data is being fetched
+					<div className="flex justify-center items-center">
+						<Loader className="animate-spin" size={50} />
 					</div>
+				) : budgetList?.length > 0 ? (
+					// Show the budget list if data is available
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+						{budgetList.map((budget) => (
+							<BudgetItem
+								key={budget.id}
+								budget={budget}
+								expensesList={expensesList} // Pass expensesList here
+							/>
+						))}
+					</div>
+				) : (
+					// Show "No budgets available" only when loading is false and the list is empty
+					<p className="text-center text-gray-500">No budgets available at the moment</p>
 				)}
 			</div>
 		</div>
