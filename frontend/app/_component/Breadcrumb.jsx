@@ -16,7 +16,7 @@ function Breadcrumbs() {
 	const pathSegments = pathname.split('/').filter(Boolean);
 
 	return (
-		<div className="pl-5 ">
+		<div className="pl-5">
 			<Breadcrumb>
 				<BreadcrumbList className="flex items-center text-sm font-semibold">
 					<BreadcrumbItem>
@@ -39,15 +39,10 @@ function Breadcrumbs() {
 								<BreadcrumbSeparator className="mx-2">/</BreadcrumbSeparator>
 								<BreadcrumbItem>
 									{isLast ? (
-										<BreadcrumbPage className="">
-											{formattedSegment}
-										</BreadcrumbPage>
+										<BreadcrumbPage>{formattedSegment}</BreadcrumbPage>
 									) : (
-										<BreadcrumbLink>
-											<Link
-												href={href}
-												className="hover:underline text-blue-500"
-											>
+										<BreadcrumbLink asChild>
+											<Link href={href} className="hover:underline text-blue-500">
 												{formattedSegment}
 											</Link>
 										</BreadcrumbLink>

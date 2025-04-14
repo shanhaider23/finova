@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUser } from '@clerk/nextjs'; // Import Clerk's useUser hook
+import { Loader } from 'lucide-react';
 
 
 
@@ -83,7 +84,7 @@ export default function FinanceAIBot() {
 			{/* Show loading state */}
 			{isLoading && (
 				<div className="p-4 bg-gray-200 dark:bg-gray-700 rounded-xl text-center">
-					<span>Loading financial advice...</span>
+					<Loader className="animate-spin" size={50} />
 				</div>
 			)}
 
