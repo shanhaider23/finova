@@ -9,7 +9,7 @@ import { addMonthly } from '@/redux/slices/monthlySlice';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-
+import { categoryDescriptions } from '@/lib/categories';
 import { predefinedCategories } from '@/lib/categories';
 import { Calendar } from '@/components/ui/calendar';
 import { useRef } from 'react';
@@ -153,10 +153,27 @@ function InputDetail() {
 		setLoading(false);
 		setIsDialogOpen(false);
 	};
-
+	const handleCategoryChange = (cat) => {
+		console.log(cat, 'cat');
+		setCategory(cat);
+		if (categoryDescriptions[cat]) {
+			setName(categoryDescriptions[cat]);
+		} else {
+			setName('');
+		}
+	};
 	return (
 		<div className="flex justify-between items-center gap-3">
-			<Dialog>
+			<Dialog
+				onOpenChange={(open) => {
+					if (open) {
+						setDate('');
+						setType('');
+						setCategory('');
+						setAmount('');
+						setName('');
+					}
+				}}>
 				<DialogTrigger asChild>
 					<div className=" cursor-pointer w-full ">
 						<button
@@ -220,7 +237,7 @@ function InputDetail() {
 										</Label>
 										<Input
 											placeholder="Type Category"
-											onChange={(e) => setCategory(e.target.value)}
+											onChange={(e) => handleCategoryChange(e.target.value)}
 											value={category}
 											className="dark:bg-gray-700 dark:text-gray-200 bg-input"
 										/>
@@ -235,7 +252,7 @@ function InputDetail() {
 													{filteredCategories.map((item, index) => (
 														<CommandItem
 															key={index}
-															onSelect={() => setCategory(item)}
+															onSelect={() => handleCategoryChange(item)}
 														>
 															{item}
 														</CommandItem>
@@ -249,7 +266,7 @@ function InputDetail() {
 									{' '}
 									<div className="mt-2">
 										<Label className="text-md text-black font-bold my-1 dark:text-gray-300">
-											Name
+											Description
 										</Label>
 										<Input
 											placeholder="Dinning at..."
