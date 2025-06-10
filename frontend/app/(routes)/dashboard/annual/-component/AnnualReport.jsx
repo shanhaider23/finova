@@ -1,3 +1,4 @@
+'use client';
 import React, { useMemo, useState } from 'react';
 
 function formatCurrency(amount) {
@@ -12,6 +13,7 @@ function getMonthName(monthIdx) {
 }
 
 function AnnualReport({ monthlyList }) {
+    monthlyList = monthlyList || [];
     // Get all years in the data
     const years = Array.from(new Set(monthlyList.map(item => new Date(item.date).getFullYear())));
     const [selectedYear, setSelectedYear] = useState(years[0]);
