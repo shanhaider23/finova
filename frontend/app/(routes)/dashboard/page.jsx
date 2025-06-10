@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Welcome from './_component/Welcome';
 import PiChartDashboard from './_component/PiChartDashboard';
 import axios from 'axios';
+import AnnualDashboard from './annual/page';
 
 function Dashboard({ params: paramsPromise }) {
 	const [expenseForecast, setExpenseForecast] = useState([]);
@@ -130,7 +131,11 @@ function Dashboard({ params: paramsPromise }) {
 			<div className="col-span-3  gap-5">
 				<BarChartDashboard budgetList={budgetList} />
 			</div>
-			<div className=" overflow-y-auto overflow-x-hidden col-span-3">
+
+			<div className=" overflow-y-auto overflow-x-hidden col-span-3 pr-2">
+				<div>
+					<AnnualDashboard monthlyList={monthlyList} />
+				</div>
 				<h2 className="font-bold text-2xl mb-4">Latest Expenses</h2>
 				<ExpenseListTable />
 			</div>
@@ -142,6 +147,7 @@ function Dashboard({ params: paramsPromise }) {
 					))}
 				</div>
 			</div>
+
 		</div>
 	);
 }
