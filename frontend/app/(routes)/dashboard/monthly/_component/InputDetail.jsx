@@ -154,7 +154,6 @@ function InputDetail() {
 		setIsDialogOpen(false);
 	};
 	const handleCategoryChange = (cat) => {
-		console.log(cat, 'cat');
 		setCategory(cat);
 		if (categoryDescriptions[cat]) {
 			setName(categoryDescriptions[cat]);

@@ -107,7 +107,7 @@ function Dashboard({ params: paramsPromise }) {
 
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(6,1fr)] grid-rows-[repeat(3,350px)] sm:grid-rows-[repeat(3,300px)] gap-5 pl-5 pr-5 pt-5">
-			<div className="col-span-3">
+			<div className="col-span-2">
 				<Welcome budgetList={budgetList} />
 			</div>
 			<div className="col-span-3 md:col-span-1 lg:col-span-1">
@@ -117,9 +117,6 @@ function Dashboard({ params: paramsPromise }) {
 					color="#F63642"
 				/>
 			</div>
-			<div className="col-span-3 md:col-span-2 lg:col-span-2 row-span-2 gap-5 overflow-hidden">
-				<PiChartDashboard monthlyList={monthlyList} />
-			</div>
 			<div className="col-span-3 md:col-span-1 lg:col-span-1">
 				<CardInfo
 					data={incomeForecast}
@@ -127,8 +124,12 @@ function Dashboard({ params: paramsPromise }) {
 					color="#98EC2D"
 				/>
 			</div>
+			<div className="col-span-3 md:col-span-2 lg:col-span-2 row-span-2 gap-5 overflow-hidden">
+				<PiChartDashboard monthlyList={monthlyList} />
+			</div>
 
-			<div className="col-span-3  gap-5">
+
+			<div className="col-span-4  gap-5">
 				<BarChartDashboard budgetList={budgetList} />
 			</div>
 
@@ -136,15 +137,19 @@ function Dashboard({ params: paramsPromise }) {
 				<div>
 					<AnnualDashboard monthlyList={monthlyList} />
 				</div>
-				<h2 className="font-bold text-2xl mb-4">Latest Expenses</h2>
-				<ExpenseListTable />
+				<div className='bg-card'>
+					<h2 className="font-bold text-2xl p-4">Latest Expenses</h2>
+					<ExpenseListTable />
+				</div>
 			</div>
-			<div className="col-span-3 row-span-1 overflow-y-auto overflow-x-hidden ">
-				<h2 className="font-bold text-2xl mb-4">Latest Budgets</h2>
-				<div className="grid grid-cols-1 gap-5 mr-0 sm:mr-5">
-					{budgetList.map((budget, i) => (
-						<BudgetItem budget={budget} key={i} expensesList={expenseList} />
-					))}
+			<div className="col-span-3 row-span-1 overflow-y-auto overflow-x-hidden  ">
+				<div className='bg-card mr-2'>
+					<h2 className="font-bold text-2xl p-4">Latest Budgets</h2>
+					<div className="grid grid-cols-1 gap-5 pl-4 mr-0 sm:mr-5">
+						{budgetList.map((budget, i) => (
+							<BudgetItem budget={budget} key={i} expensesList={expenseList} />
+						))}
+					</div>
 				</div>
 			</div>
 
