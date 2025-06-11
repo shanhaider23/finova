@@ -1,5 +1,6 @@
 'use client';
 import React, { useMemo, useState } from 'react';
+import BarChartAnnual from './BarChartAnnual';
 
 function formatCurrency(amount) {
     return `${amount.toLocaleString()}`;
@@ -27,6 +28,7 @@ function AnnualReport({ monthlyList }) {
         monthIncomes,
         totalIncome,
         totalExpense,
+        categoryPercentData,
         savings
     } = useMemo(() => {
         // Filter data for the selected year
@@ -69,6 +71,10 @@ function AnnualReport({ monthlyList }) {
         const totalIncome = yearData.filter(i => i.type === 'income').reduce((sum, i) => sum + i.amount, 0);
         const totalExpense = yearData.filter(i => i.type === 'expense').reduce((sum, i) => sum + i.amount, 0);
         const savings = totalIncome - totalExpense;
+        const categoryPercentData = categories.map(cat => ({
+            category: cat,
+            percent: totalIncome ? Math.round((categoryTotals[cat] / totalIncome) * 100) : 0,
+        }));
 
         return {
             months,
@@ -78,12 +84,14 @@ function AnnualReport({ monthlyList }) {
             monthIncomes,
             totalIncome,
             totalExpense,
+            categoryPercentData,
             savings
         };
     }, [monthlyList, selectedYear]);
 
     return (
         <div className=" shadow-lg overflow-hidden bg-card  mb-4 ">
+            <h1 className="text-2xl font-bold p-4">Annual Insights</h1>
             {/* Header */}
             <div className="flex flex-wrap items-center justify-between p-4 gap-2">
                 <div >
@@ -105,7 +113,9 @@ function AnnualReport({ monthlyList }) {
                     <span className='text-blue-500'>Savings: <b>{formatCurrency(savings)}</b></span>
                 </div>
             </div>
-
+            <div>
+                <BarChartAnnual data={categoryPercentData} />
+            </div>
             {/* Table */}
             <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
