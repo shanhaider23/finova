@@ -21,18 +21,17 @@ function QuickCategoryInput({ category, type = "expense" }) {
         }
         setLoading(true);
         const email = user?.primaryEmailAddress?.emailAddress;
-        const newAmount = Number(amount) + cumulative;
         await dispatch(addMonthly({
             date: new Date().toISOString(),
             type,
             name: category,
             category,
-            amount: newAmount,
+            amount: Number(amount), // Only add the new amount
             email
         }));
         toast.success('Amount added!');
-        setCumulative(newAmount); // update cumulative
-        setAmount(''); // clear input
+        setCumulative(cumulative + Number(amount)); // Update local total
+        setAmount('');
         setLoading(false);
     };
 

@@ -7,6 +7,7 @@ import BudgetItem from './BudgetItem';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchBudgets } from '@/redux/slices/budgetSlice';
 import { fetchExpenses } from '@/redux/slices/expenseSlice';
+import ParentBudget from './ParentBudget';
 
 function BudgetList() {
 	const { user } = useUser();
@@ -24,30 +25,13 @@ function BudgetList() {
 	return (
 		<div className="mt-5 flex flex-col gap-5">
 			<div>
+
+				<ParentBudget />
+			</div>
+			<div>
 				<CreateBudget />
 			</div>
-			<div className="pl-5">
-				{loading ? (
-					// Show a loader while data is being fetched
-					<div className="flex justify-center items-center">
-						<Loader className="animate-spin" size={50} />
-					</div>
-				) : budgetList?.length > 0 ? (
-					// Show the budget list if data is available
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-						{budgetList.map((budget) => (
-							<BudgetItem
-								key={budget.id}
-								budget={budget}
-								expensesList={expensesList} // Pass expensesList here
-							/>
-						))}
-					</div>
-				) : (
-					// Show "No budgets available" only when loading is false and the list is empty
-					<p className="text-center text-gray-500">No budgets available at the moment</p>
-				)}
-			</div>
+
 		</div>
 	);
 }

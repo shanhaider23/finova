@@ -127,32 +127,9 @@ function Dashboard({ params: paramsPromise }) {
 			<div className="col-span-3 md:col-span-2 lg:col-span-2 row-span-2 gap-5 overflow-hidden">
 				<PiChartDashboard monthlyList={monthlyList} />
 			</div>
-
-
-			<div className="col-span-4  gap-5">
-				<BarChartDashboard budgetList={budgetList} />
+			<div className="col-span-4 row-span-2 overflow-y-auto overflow-x-hidden pr-2">
+				<AnnualDashboard monthlyList={monthlyList} />
 			</div>
-
-			<div className=" overflow-y-auto overflow-x-hidden col-span-3 pr-2">
-				<div>
-					<AnnualDashboard monthlyList={monthlyList} />
-				</div>
-				<div className='bg-card'>
-					<h2 className="font-bold text-2xl p-4">Latest Expenses</h2>
-					<ExpenseListTable />
-				</div>
-			</div>
-			<div className="col-span-3 row-span-1 overflow-y-auto overflow-x-hidden  ">
-				<div className='bg-card mr-2'>
-					<h2 className="font-bold text-2xl p-4">Latest Budgets</h2>
-					<div className="grid grid-cols-1 gap-5 pl-4 mr-0 sm:mr-5">
-						{budgetList.map((budget, i) => (
-							<BudgetItem budget={budget} key={i} expensesList={expenseList} />
-						))}
-					</div>
-				</div>
-			</div>
-
 		</div>
 	);
 }
