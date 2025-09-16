@@ -14,6 +14,8 @@ import Welcome from './_component/Welcome';
 import PiChartDashboard from './_component/PiChartDashboard';
 import axios from 'axios';
 import AnnualDashboard from './annual/page';
+import CashFlowGauge from './_component/CashFlowGauge';
+import SpendingLeaderboard from './_component/SpendingLeaderboard';
 
 function Dashboard({ params: paramsPromise }) {
 	const [expenseForecast, setExpenseForecast] = useState([]);
@@ -124,6 +126,14 @@ function Dashboard({ params: paramsPromise }) {
 					color="#98EC2D"
 				/>
 			</div>
+			<div className="col-span-3 md:col-span-1 lg:col-span-1 flex flex-col h-full">
+				<CashFlowGauge monthlyList={monthlyList} />
+			</div>
+			<div className="col-span-3 md:col-span-1 lg:col-span-1 flex flex-col h-full">
+
+				<SpendingLeaderboard expenses={expenseList} />
+			</div>
+
 			<div className="col-span-3 md:col-span-2 lg:col-span-2 row-span-2 gap-5 overflow-hidden">
 				<PiChartDashboard monthlyList={monthlyList} />
 			</div>
