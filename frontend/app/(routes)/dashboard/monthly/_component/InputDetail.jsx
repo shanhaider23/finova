@@ -14,7 +14,7 @@ import { predefinedCategories } from '@/lib/categories';
 import { Calendar } from '@/components/ui/calendar';
 import { useRef } from 'react';
 import Papa from 'papaparse';
-
+import QuickCategoryInput from './AddInput';
 import {
 	Command,
 	CommandEmpty,
@@ -209,6 +209,67 @@ function InputDetail() {
 									/>
 								</div>
 								<div className="mt-2 justify-center items-start flex gap-5 flex-col">
+
+									<div className='flex flex-col gap-2 w-full'>
+										<h2 className="text-lg font-bold mb-2 dark:text-gray-200">
+											Add Income and Expense with fixed categories and name
+										</h2>
+										<div className="mt-2 ">
+											<QuickCategoryInput category="Salary" type="income" />
+											<QuickCategoryInput category="House Rent" />
+											<QuickCategoryInput category="Electricity Bill" />
+											<QuickCategoryInput category="Internet Bill" />
+											<QuickCategoryInput category="Grocery" />
+											<QuickCategoryInput category="Shopping" />
+											<QuickCategoryInput category="Food/Dining out" />
+											<QuickCategoryInput category="Bank Fees" />
+											<QuickCategoryInput category="Car Insurance" />
+											<QuickCategoryInput category="Mobile Phone Bill" />
+											<QuickCategoryInput category="Petrol" />
+											<QuickCategoryInput category="Gifts & Celebrations" />
+											<QuickCategoryInput category="Clothing & Accessories" />
+											<QuickCategoryInput category="Charity & Donations" />
+											<QuickCategoryInput category="Transport" />
+											<QuickCategoryInput category="Entertainment" />
+											<QuickCategoryInput category="Health" />
+
+
+										</div>
+										<div className="mt-2">
+											<h2 className="font-bold text-base mb-2 dark:text-gray-200">
+												Custom Entry
+											</h2>
+											<Label className="text-md text-black font-bold  dark:text-gray-300">
+												Category
+											</Label>
+											<Input
+												placeholder="Type Category"
+												onChange={(e) => handleCategoryChange(e.target.value)}
+												value={category}
+												className="dark:bg-gray-700 dark:text-gray-200 bg-input"
+											/>
+											<Command className="bg-input border shadow-md md:min-w-[300px] h-[150px] overflow-y-hidden mt-1">
+												<CommandInput placeholder="Type a command or search..." />
+												<CommandList>
+													<CommandEmpty>No results found.</CommandEmpty>
+													<CommandGroup
+														heading="Suggestions"
+														className=" overflow-y-auto"
+													>
+														{filteredCategories.map((item, index) => (
+															<CommandItem
+																key={index}
+																onSelect={() => handleCategoryChange(item)}
+															>
+																{item}
+															</CommandItem>
+														))}
+													</CommandGroup>
+												</CommandList>
+											</Command>
+										</div>
+
+									</div>
 									<div className="mt-2">
 										<Label className="text-md text-black font-bold my-1 dark:text-gray-300 ">
 											Type
@@ -230,36 +291,6 @@ function InputDetail() {
 										</RadioGroup>
 									</div>
 
-									<div className="mt-2">
-										<Label className="text-md text-black font-bold  dark:text-gray-300">
-											Category
-										</Label>
-										<Input
-											placeholder="Type Category"
-											onChange={(e) => handleCategoryChange(e.target.value)}
-											value={category}
-											className="dark:bg-gray-700 dark:text-gray-200 bg-input"
-										/>
-										<Command className="bg-input border shadow-md md:min-w-[300px] h-[150px] overflow-y-hidden mt-1">
-											<CommandInput placeholder="Type a command or search..." />
-											<CommandList>
-												<CommandEmpty>No results found.</CommandEmpty>
-												<CommandGroup
-													heading="Suggestions"
-													className=" overflow-y-auto"
-												>
-													{filteredCategories.map((item, index) => (
-														<CommandItem
-															key={index}
-															onSelect={() => handleCategoryChange(item)}
-														>
-															{item}
-														</CommandItem>
-													))}
-												</CommandGroup>
-											</CommandList>
-										</Command>
-									</div>
 								</div>
 								<div className="mt-2 justify-center items-start flex gap-5 flex-col">
 									{' '}
