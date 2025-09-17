@@ -16,6 +16,8 @@ import axios from 'axios';
 import AnnualDashboard from './annual/page';
 import CashFlowGauge from './_component/CashFlowGauge';
 import SpendingLeaderboard from './_component/SpendingLeaderboard';
+import NetWorthChart from './_component/NetWorthChart';
+import IncomeVsExpenses from './_component/IncomeVsExpenses';
 
 function Dashboard({ params: paramsPromise }) {
 	const [expenseForecast, setExpenseForecast] = useState([]);
@@ -32,6 +34,7 @@ function Dashboard({ params: paramsPromise }) {
 	} = useSelector((state) => state.expenses);
 	const { list: monthlyList } = useSelector((state) => state.monthly);
 
+	console.log("Monthly List in Dashboard:", monthlyList);
 
 	useEffect(() => {
 		if (!isSignedIn) {
@@ -133,6 +136,14 @@ function Dashboard({ params: paramsPromise }) {
 
 				<SpendingLeaderboard expenses={expenseList} />
 			</div>
+			<div className="col-span-2">
+
+				<NetWorthChart data={monthlyList} />
+			</div>
+			<div className="col-span-2">
+
+				<IncomeVsExpenses data={monthlyList} />
+			</div>
 
 			<div className="col-span-3 md:col-span-2 lg:col-span-2 row-span-2 gap-5 overflow-hidden">
 				<PiChartDashboard monthlyList={monthlyList} />
@@ -140,7 +151,7 @@ function Dashboard({ params: paramsPromise }) {
 			<div className="col-span-4 row-span-2 overflow-y-auto overflow-x-hidden pr-2">
 				<AnnualDashboard monthlyList={monthlyList} />
 			</div>
-		</div>
+		</div >
 	);
 }
 
