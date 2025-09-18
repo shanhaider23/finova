@@ -81,7 +81,7 @@ export default function CryptoCard() {
     }, [coin, currency, days]);
 
     return (
-        <div className="bg-card rounded-xl shadow-lg p-5 w-full h-[98%] ">
+        <div className="bg-card rounded-xl shadow-lg p-5 w-full h-[100%] ">
             <div className="flex gap-2 mb-3 w-full">
                 <select
                     className="rounded px-2 py-1 border border-gray-300 dark:bg-gray-800 dark:text-gray-200"

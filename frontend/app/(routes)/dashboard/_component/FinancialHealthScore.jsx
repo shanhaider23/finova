@@ -35,7 +35,7 @@ export default function FinancialHealthScore({
     ];
 
     return (
-        <div className="bg-card rounded-xl shadow-lg p-5 flex flex-col items-center w-full h-[98%]">
+        <div className="bg-card rounded-xl shadow-lg p-5 flex flex-col items-center w-full h-[100%]">
             <h2 className="text-xl font-semibold text-center">Financial Health Score</h2>
             <div className="w-full flex justify-center -mt-16">
                 <ResponsiveContainer width={180} height={180}>
