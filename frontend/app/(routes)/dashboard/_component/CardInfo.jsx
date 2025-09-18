@@ -29,7 +29,7 @@ function CardInfo({ data, name, color }) {
 
 	return (
 		<div className="bg-card h-full flex justify-around items-center flex-col p-5 rounded-lg shadow-md">
-			<h2 className="font-bold text-lg text-gray-800 dark:text-gray-200 mb-3 self-start">
+			<h2 className="text-xl font-semibold mb-2 text-center">
 				{name}
 			</h2>
 			<ResponsiveContainer width="100%" height={220}>

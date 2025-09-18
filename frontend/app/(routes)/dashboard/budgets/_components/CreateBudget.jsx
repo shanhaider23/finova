@@ -19,6 +19,7 @@ import { useUser } from '@clerk/nextjs';
 import { toast } from 'sonner';
 import { useDispatch } from 'react-redux';
 import { createBudget } from '@/redux/slices/budgetSlice';
+import { PlusCircle } from 'lucide-react'
 import {
 	Select,
 	SelectContent,
@@ -27,7 +28,7 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 
-function CreateBudget({ refreshData }) {
+function CreateBudget({ parentId }) {
 	const dispatch = useDispatch();
 	const [emojiIcon, setEmojiIcon] = useState('Emoji');
 	const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
@@ -44,7 +45,7 @@ function CreateBudget({ refreshData }) {
 			return;
 		}
 
-		dispatch(createBudget({ name, amount, currency, email, emojiIcon }));
+		dispatch(createBudget({ name, amount, currency, email, emojiIcon, parent: parentId }));
 		setName('');
 		setAmount('');
 		setCurrency('');
@@ -55,7 +56,12 @@ function CreateBudget({ refreshData }) {
 			<Dialog>
 				<DialogTrigger asChild>
 					<div className=" cursor-pointer flex justify-end ">
-						<button className="btn-grad">Create New Budget</button>
+						<button
+							className="flex items-center gap-2 px-4 py-2 rounded bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-white font-semibold shadow hover:from-green-500 hover:via-blue-600 hover:to-purple-700 transition-all duration-300"
+						>
+							<PlusCircle className="w-5 h-5" />
+							Create Child Budget
+						</button>
 					</div>
 				</DialogTrigger>
 				<DialogContent className="bg-card">

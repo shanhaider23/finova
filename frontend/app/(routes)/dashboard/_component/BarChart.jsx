@@ -38,36 +38,38 @@ function BarChartDashboard({ budgetList, totalBudget, totalSpend }) {
 			<h2 className="font-bold text-lg text-gray-800 dark:text-gray-200 mb-2">
 				Budgets Activity
 			</h2>
-			<ResponsiveContainer width={'100%'} height={'90%'}>
-				<BarChart
-					data={processedData}
-					margin={{
-						top: 5,
-						right: 5,
-						left: 5,
-						bottom: 60,
-					}}
-					barCategoryGap="20%"
-				>
-					<XAxis dataKey="name" stroke={isDarkMode ? '#ddd' : '#8884d8'} interval={0} textAnchor="end" angle={-25} />
-					<YAxis stroke={isDarkMode ? '#ddd' : '#8884d8'} />
-					<Tooltip
-						contentStyle={{
-							backgroundColor: isDarkMode ? '#222' : '#fff',
-							color: isDarkMode ? '#fff' : '#222',
-							borderRadius: '8px',
-							border: 'none'
+			<div>
+				<ResponsiveContainer width="100%" height={500}>
+					<BarChart
+						data={processedData}
+						margin={{
+							top: 5,
+							right: 5,
+							left: 5,
+							bottom: 60,
 						}}
-					/>
-					<Legend wrapperStyle={{ color: isDarkMode ? '#ddd' : '#8884d8' }}
-						layout="horizontal"
-						verticalAlign="top"
-						align="center" />
-					<Bar dataKey="spendWithinBudget" stackId="a" fill={spendBarColor} name="Spent (within budget)" />
-					<Bar dataKey="spendOverBudget" stackId="a" fill={overBarColor} name="Over Spent" />
-					<Bar dataKey="remaining" stackId="a" fill={budgetBarColor} name="Remaining Budget" />
-				</BarChart>
-			</ResponsiveContainer>
+						barCategoryGap="20%"
+					>
+						<XAxis dataKey="name" stroke={isDarkMode ? '#ddd' : '#8884d8'} interval={0} textAnchor="end" angle={-25} />
+						<YAxis stroke={isDarkMode ? '#ddd' : '#8884d8'} />
+						<Tooltip
+							contentStyle={{
+								backgroundColor: isDarkMode ? '#222' : '#fff',
+								color: isDarkMode ? '#fff' : '#222',
+								borderRadius: '8px',
+								border: 'none'
+							}}
+						/>
+						<Legend wrapperStyle={{ color: isDarkMode ? '#ddd' : '#8884d8' }}
+							layout="horizontal"
+							verticalAlign="top"
+							align="center" />
+						<Bar dataKey="spendWithinBudget" stackId="a" fill={spendBarColor} name="Spent (within budget)" />
+						<Bar dataKey="spendOverBudget" stackId="a" fill={overBarColor} name="Over Spent" />
+						<Bar dataKey="remaining" stackId="a" fill={budgetBarColor} name="Remaining Budget" />
+					</BarChart>
+				</ResponsiveContainer>
+			</div>
 		</div>
 	);
 }

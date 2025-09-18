@@ -1,8 +1,8 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import MonthlyRecord, Budget, Expense, Task
-from .serializers import MonthlyRecordSerializer, BudgetSerializer, ExpenseSerializer, TaskSerializer
+from .models import MonthlyRecord, Budget, Expense, Task, ParentBudget
+from .serializers import MonthlyRecordSerializer, BudgetSerializer, ExpenseSerializer, TaskSerializer, ParentBudgetSerializer
 from .ml import forecast_next_six_months_income, forecast_next_six_months_expenses
 from django.db.models import Sum, Count
 import json
@@ -11,6 +11,21 @@ from django.http import JsonResponse
 from .services import generate_financial_advice
 import hashlib
 from django.core.cache import cache
+
+
+class ParentBudgetListCreateView(generics.ListCreateAPIView):
+    queryset = ParentBudget.objects.all()
+    serializer_class = ParentBudgetSerializer
+
+    def get_queryset(self):
+        user_email = self.request.query_params.get('email')
+        if user_email:
+            return ParentBudget.objects.filter(created_by=user_email)
+        return ParentBudget.objects.none()
+
+class ParentBudgetDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ParentBudget.objects.all()
+    serializer_class = ParentBudgetSerializer 
 
 # Budget Views
 class BudgetListCreateView(generics.ListCreateAPIView):

@@ -1,8 +1,9 @@
 import { UserButton, useUser } from '@clerk/nextjs';
-import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
+import FinanceAIAdviceBanner from '../advice/_component/FinanceAIAdviceBanner';
+import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
 
-function Welcome({ budgetList }) {
+function Welcome({ budgetList, parentBudgetList }) {
 	const { user } = useUser();
 	const [totalBudget, setTotalBudget] = useState(0);
 	const [totalSpend, setTotalSpend] = useState(0);
@@ -18,56 +19,68 @@ function Welcome({ budgetList }) {
 		const savedRates = localStorage.getItem('currencyRates');
 		const savedLastUpdated = localStorage.getItem('lastUpdated');
 
-		if (savedRates) {
-			setRates(JSON.parse(savedRates));
-		}
-		if (savedLastUpdated) {
-			setLastUpdated(savedLastUpdated);
-		}
+		if (savedRates) setRates(JSON.parse(savedRates));
+		if (savedLastUpdated) setLastUpdated(savedLastUpdated);
 		if (storedFromCurrency) setFromCurrency(storedFromCurrency);
 		if (storedToCurrency) setToCurrency(storedToCurrency);
 
-		if (budgetList) {
+		if (budgetList && parentBudgetList) {
 			CalculateCardInfo();
 		}
-	}, [budgetList]);
+		// eslint-disable-next-line
+	}, [budgetList, parentBudgetList]);
 
 	const CalculateCardInfo = () => {
 		let total_budget = 0;
 		let total_spend = 0;
-		budgetList.forEach((budget) => {
-			setCurrency(budget.currency);
-			total_budget += Number(budget.amount);
-			total_spend += budget.totalSpend;
-		});
+
+		if (parentBudgetList && parentBudgetList.length > 0) {
+			parentBudgetList.forEach((parent) => {
+				total_budget += Number(parent.amount);
+				setCurrency(parent.currency);
+			});
+		}
+		if (budgetList && budgetList.length > 0) {
+			budgetList.forEach((budget) => {
+				total_spend += Number(budget.totalSpend || 0);
+			});
+		}
 		setTotalBudget(total_budget);
 		setTotalSpend(total_spend);
 	};
+
 	const getCurrencyFlag = (currencyCode) => {
 		return `https://flagcdn.com/w40/${currencyCode
 			.substring(0, 2)
 			.toLowerCase()}.png`;
 	};
-	const progress = Math.min((totalSpend / totalBudget) * 100, 100);
+
+	const progress = totalBudget > 0 ? Math.min((totalSpend / totalBudget) * 100, 100) : 0;
+	const gaugeData = [
+		{
+			name: "Used",
+			value: progress,
+			fill: progress < 80 ? "#22c55e" : progress < 100 ? "#facc15" : "#ef4444",
+		},
+	];
+
 	return (
 		<div className="flex flex-col bg-card h-full justify-between items-stretch pt-5 overflow-auto shadow-md">
-			<div className="flex justify-between items-center pl-5 pr-5 flex-wrap gap-2">
-				<div className="flex justify-center items-center gap-2 ">
+			{/* Header */}
+			<div className="flex flex-col sm:flex-row justify-between items-center px-4 gap-4">
+				<div className="flex items-center gap-2">
 					<UserButton />
 					<div>
 						<p>Welcome back</p>
-						<h1 className=" text-xl font-semibold  break-words">
+						<h1 className="text-xl font-semibold break-words">
 							{user?.fullName}!
 						</h1>
 					</div>
 				</div>
-				<div>
-					{fromCurrency &&
-						toCurrency &&
-						rates[fromCurrency] &&
-						rates[toCurrency] ? (
+				<div className="w-full sm:w-auto">
+					{fromCurrency && toCurrency && rates[fromCurrency] && rates[toCurrency] ? (
 						<>
-							<div className="flex justify-start sm:justify-center items-center gap-3">
+							<div className="flex justify-center items-center gap-3">
 								<div className="flex items-center gap-2">
 									<img
 										src={getCurrencyFlag(fromCurrency)}
@@ -76,9 +89,7 @@ function Welcome({ budgetList }) {
 									/>
 									<span className="font-semibold">{fromCurrency}</span>
 								</div>
-
 								<span className="text-lg">to</span>
-
 								<div className="flex items-center gap-2">
 									<img
 										src={getCurrencyFlag(toCurrency)}
@@ -88,17 +99,14 @@ function Welcome({ budgetList }) {
 									<span className="font-semibold">{toCurrency}</span>
 								</div>
 							</div>
-
-							<div className="flex flex-col ">
-								<p className="text-left sm:text-center  text-md text-gray-500">
+							<div className="flex flex-col">
+								<p className="text-center text-md text-gray-500">
 									Exchange Rate:{' '}
 									<strong>
 										{(rates[toCurrency] / rates[fromCurrency]).toFixed(2)}
 									</strong>
 								</p>
-
-								{/* Last Updated */}
-								<p className="text-center  text-xs text-gray-500">
+								<p className="text-center text-xs text-gray-500">
 									Last Updated:{' '}
 									<strong>
 										{new Date(lastUpdated).toLocaleString('en-GB', {
@@ -119,65 +127,45 @@ function Welcome({ budgetList }) {
 				</div>
 			</div>
 
-			<div className="flex justify-between items-center pl-0 sm:pl-5 pr-5  ">
-				<div className="flex flex-col items-stretch justify-between">
-					{budgetList ? (
-						<div className="flex justify-between items-stretch ">
-							<div className="flex flex-col border-r-2 ml-5 mt-5 mb-5 pr-1 sm:pr-5 ">
-								<div className="flex justify-center items-center gap-2">
-									<h1 className="text-3xl text-gray-900 dark:text-gray-100 pb-2">
-										{totalBudget}
-									</h1>
-									<p className="text-lg">{currency}</p>
-								</div>
-								<h2 className="text-gray-700 dark:text-gray-200 font-semibold lg:text-lg sm:text-sm">
-									Total Budget
-								</h2>
-							</div>
-
-							<div className="flex flex-col  m-5">
-								<div className="flex justify-center items-center gap-2">
-									<h2 className="text-3xl text-gray-900 dark:text-gray-100 pb-2">
-										{totalSpend}
-									</h2>
-									<p className="text-lg">{currency}</p>
-								</div>
-								<h2 className="text-gray-700 dark:text-gray-200 font-semibold lg:text-lg sm:text-sm">
-									Total Spend
-								</h2>
-							</div>
-						</div>
-					) : (
-						<div className="flex gap-6 w-full">
-							{[1, 2, 3].map((item, i) => (
-								<div
-									key={i}
-									className="h-[120px] w-full bg-slate-200 dark:bg-slate-700 animate-pulse rounded-lg"
-								></div>
-							))}
-						</div>
-					)}
-
-					<div className="ml-5 mr-5">
-						<div className="relative h-3 rounded-full bg-gray-200 dark:bg-gray-600">
-							<div
-								className="absolute top-0 left-0 h-3 rounded-full bg-green-500 transition-all"
-								style={{ width: `${progress}%` }}
-							></div>
-						</div>
-						<p className="text-sm text-gray-600 mt-1 text-center dark:text-gray-300">
-							{progress.toFixed(0)}% used
-						</p>
-					</div>
+			{/* Main Content: Responsive columns */}
+			<div className="flex flex-col lg:flex-row gap-6 w-full items-stretch justify-center py-6">
+				{/* Advice Banner */}
+				<div className="w-full lg:w-[60%] flex flex-col justify-center mb-6 lg:mb-0">
+					<FinanceAIAdviceBanner />
 				</div>
+				{/* Gauge */}
+				<div className="w-full lg:w-[40%] flex flex-col justify-center items-center ">
 
-				<div className="hidden sm:block">
-					<Image
-						src="/welcome.png"
-						alt="Logo"
-						width={250}
-						height={200}
-					/>
+					<div className="w-full flex justify-center -mt-24">
+						<RadialBarChart
+							width={180}
+							height={150}
+							cx="50%"
+							cy="100%"
+							innerRadius="80%"
+							outerRadius="100%"
+							barSize={18}
+							data={gaugeData}
+							startAngle={180}
+							endAngle={0}
+						>
+							<PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
+							<RadialBar
+								minAngle={15}
+								clockWise
+								dataKey="value"
+								cornerRadius={10}
+							/>
+						</RadialBarChart>
+					</div>
+					<div className="text-center mt-2">
+						<div className="text-lg font-bold">{progress.toFixed(0)}% Budget used</div>
+						<div className="text-sm text-gray-500">
+							{totalBudget - totalSpend > 0
+								? `${(totalBudget - totalSpend).toLocaleString()} ${currency} remaining`
+								: `Over budget by ${(totalSpend - totalBudget).toLocaleString()} ${currency}`}
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import MonthlyRecord, Budget, Expense, Task
+from .models import MonthlyRecord, Budget, Expense, Task, ParentBudget
 
 class MonthlyRecordSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,7 +12,12 @@ class BudgetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Budget
-        fields = ['id', 'name', 'amount', 'currency', 'icon', 'created_by', 'totalSpend', 'totalItem']
+        fields = ['id', 'name', 'amount', 'currency', 'icon', 'created_by', 'parent', 'totalSpend', 'totalItem']
+
+class ParentBudgetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ParentBudget
+        fields = '__all__'
 
 
 class ExpenseSerializer(serializers.ModelSerializer):

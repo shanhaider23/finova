@@ -25,47 +25,47 @@ function BarChartAnnual({ data }) {
 
     return (
         <div className="shadow-lg bg-card h-full hover:shadow-xl p-5">
-            <ResponsiveContainer width={'100%'} height={300}>
-                <ResponsiveContainer width={'100%'} height={300}>
-                    <BarChart
-                        data={data}
-                        margin={{
-                            top: 5,
-                            right: 5,
-                            left: 5,
-                            bottom: 60,
+
+            <ResponsiveContainer width={'100%'} height={500}>
+                <BarChart
+                    data={data}
+                    margin={{
+                        top: 5,
+                        right: 5,
+                        left: 5,
+                        bottom: 60,
+                    }}
+                    barCategoryGap="20%"
+                >
+                    <XAxis
+                        dataKey="category" // <-- Fix here
+                        stroke={isDarkMode ? '#ddd' : '#8884d8'}
+                        interval={0}
+                        textAnchor="end"
+                        angle={-25}
+                    />
+                    <YAxis
+                        stroke={isDarkMode ? '#ddd' : '#8884d8'}
+                        unit="%"
+                    />
+                    <Tooltip
+                        contentStyle={{
+                            backgroundColor: isDarkMode ? '#222' : '#fff',
+                            color: isDarkMode ? '#fff' : '#222',
+                            borderRadius: '8px',
+                            border: 'none'
                         }}
-                        barCategoryGap="20%"
-                    >
-                        <XAxis
-                            dataKey="category" // <-- Fix here
-                            stroke={isDarkMode ? '#ddd' : '#8884d8'}
-                            interval={0}
-                            textAnchor="end"
-                            angle={-25}
-                        />
-                        <YAxis
-                            stroke={isDarkMode ? '#ddd' : '#8884d8'}
-                            unit="%"
-                        />
-                        <Tooltip
-                            contentStyle={{
-                                backgroundColor: isDarkMode ? '#222' : '#fff',
-                                color: isDarkMode ? '#fff' : '#222',
-                                borderRadius: '8px',
-                                border: 'none'
-                            }}
-                        />
-                        <Legend
-                            wrapperStyle={{ color: isDarkMode ? '#ddd' : '#8884d8' }}
-                            layout="horizontal"
-                            verticalAlign="top"
-                            align="center"
-                        />
-                        <Bar dataKey="percent" fill={spendBarColor} name="Yearly percentage" />
-                    </BarChart>
-                </ResponsiveContainer>
+                    />
+                    <Legend
+                        wrapperStyle={{ color: isDarkMode ? '#ddd' : '#8884d8' }}
+                        layout="horizontal"
+                        verticalAlign="top"
+                        align="center"
+                    />
+                    <Bar dataKey="percent" fill={spendBarColor} name="Yearly percentage" />
+                </BarChart>
             </ResponsiveContainer>
+
         </div>
     );
 }

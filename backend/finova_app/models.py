@@ -10,6 +10,15 @@ class MonthlyRecord(models.Model):
 
     def __str__(self):
         return f"{self.date} - {self.name} - {self.type} - {self.amount}"
+    
+class ParentBudget(models.Model):
+    name = models.CharField(max_length=255)
+    amount = models.FloatField()
+    currency = models.CharField(max_length=50)
+    created_by = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.name} - {self.amount} {self.currency}"
 
 class Budget(models.Model):
     name = models.CharField(max_length=255)
@@ -17,9 +26,11 @@ class Budget(models.Model):
     currency = models.CharField(max_length=50)
     icon = models.CharField(max_length=255, null=True, blank=True)
     created_by = models.CharField(max_length=255)
+    parent=models.ForeignKey(ParentBudget, on_delete=models.CASCADE, related_name="child_budgets", null=True, blank=True)
 
     def __str__(self):
-        return f"{self.name} - {self.amount} {self.currency}"
+        parent_name = self.parent.name if self.parent else "No Parent"
+        return f"{self.name} ({parent_name}) - {self.amount} {self.currency}"
 
 
 class Expense(models.Model):
