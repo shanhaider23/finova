@@ -221,17 +221,22 @@ function InputDetail() {
 											<QuickCategoryInput category="Internet Bill" />
 											<QuickCategoryInput category="Grocery" />
 											<QuickCategoryInput category="Shopping" />
+											<QuickCategoryInput category="Kids" />
 											<QuickCategoryInput category="Food/Dining out" />
 											<QuickCategoryInput category="Bank Fees" />
 											<QuickCategoryInput category="Car Insurance" />
 											<QuickCategoryInput category="Mobile Phone Bill" />
 											<QuickCategoryInput category="Petrol" />
+											<QuickCategoryInput category="Vacation & Travel" />
 											<QuickCategoryInput category="Gifts & Celebrations" />
 											<QuickCategoryInput category="Clothing & Accessories" />
 											<QuickCategoryInput category="Charity & Donations" />
 											<QuickCategoryInput category="Transport" />
 											<QuickCategoryInput category="Entertainment" />
 											<QuickCategoryInput category="Health" />
+											<QuickCategoryInput category="Savings & Investments" type='income' />
+											<QuickCategoryInput category="Bonus" type='income' />
+											<QuickCategoryInput category="Earnings" type='income' />
 
 
 										</div>
