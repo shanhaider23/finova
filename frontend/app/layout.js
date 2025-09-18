@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { useUser } from "@clerk/nextjs";
 import Head from "next/head";
 import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const geistSans = Outfit({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Outfit({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -31,6 +32,7 @@ export default function RootLayout({ children }) {
             <Toaster />
             <AppContent>{children}</AppContent> {/* 👈 Move logic into a child component */}
             <Analytics />
+            <SpeedInsights />
           </body>
         </html>
       </Provider>
