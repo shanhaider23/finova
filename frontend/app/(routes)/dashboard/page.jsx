@@ -153,29 +153,28 @@ function Dashboard({ params: paramsPromise }) {
 
 
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(6,1fr)] grid-rows-[repeat(3,350px)] sm:grid-rows-[repeat(3,300px)] gap-5 pl-5 pr-5 pt-5">
-			<div className="col-span-2">
+		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 auto-rows-[minmax(250px,auto)] gap-y-8 gap-x-5 px-2 sm:px-4 pt-5">
+			<div className="lg:col-span-2 col-span-1">
 				<Welcome budgetList={budgetList} parentBudgetList={parentBudgetList} />
 			</div>
-			<div className="col-span-3 md:col-span-1 lg:col-span-1">
+			<div className="lg:col-span-1 col-span-1">
 				<CardInfo
 					data={expenseForecast}
 					name="Expense Forecast"
 					color="#F63642"
 				/>
 			</div>
-			<div className="col-span-3 md:col-span-1 lg:col-span-1">
+			<div className="lg:col-span-1 col-span-1">
 				<CardInfo
 					data={incomeForecast}
 					name="Income Forecast"
 					color="#98EC2D"
 				/>
 			</div>
-			<div className="col-span-2">
-
+			<div className="lg:col-span-2 col-span-1">
 				<IncomeVsExpenses data={monthlyList} />
 			</div>
-			<div className="col-span-2">
+			<div className="lg:col-span-2 col-span-1">
 				<FinancialHealthScore
 					spending={spending}
 					savingsRate={savingsRate}
@@ -183,40 +182,34 @@ function Dashboard({ params: paramsPromise }) {
 					netWorthGrowth={netWorthGrowth}
 				/>
 			</div>
-			<div className="col-span-2">
-
+			<div className="lg:col-span-2 col-span-1">
 				<NetWorthChart data={monthlyList} />
 			</div>
-			<div className="col-span-3 md:col-span-1 lg:col-span-1 flex flex-col h-full">
+			<div className="lg:col-span-1 col-span-1 flex flex-col h-full">
 				<CashFlowGauge monthlyList={monthlyList} />
 			</div>
-			<div className="col-span-3 md:col-span-1 lg:col-span-1 flex flex-col h-full">
-
+			<div className="lg:col-span-1 col-span-1 flex flex-col h-full">
 				<SpendingLeaderboard expenses={expenseList} />
 			</div>
-
-
-
-			<div className="col-span-2">
+			<div className="lg:col-span-2 col-span-1">
 				<CryptoCard />
 			</div>
-			<div className="col-span-2">
-				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 lg:grid-row-3 gap-2">
+			<div className="lg:col-span-2 col-span-1">
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
 					{companies.map(company => (
-						<div key={company.symbol} className="">
+						<div key={company.symbol}>
 							<StockCard symbol={company.symbol} name={company.name} />
 						</div>
 					))}
 				</div>
 			</div>
-
-			<div className="col-span-3 md:col-span-2 lg:col-span-2 row-span-2 gap-5 overflow-hidden">
+			<div className="lg:col-span-2 col-span-1 row-span-2 gap-5 overflow-hidden">
 				<PiChartDashboard monthlyList={monthlyList} />
 			</div>
-			<div className="col-span-4 row-span-2 overflow-y-auto overflow-x-hidden pr-2">
+			<div className="lg:col-span-4 col-span-1 row-span-2 overflow-y-auto overflow-x-hidden pr-2">
 				<AnnualDashboard monthlyList={monthlyList} />
 			</div>
-		</div >
+		</div>
 	);
 }
 

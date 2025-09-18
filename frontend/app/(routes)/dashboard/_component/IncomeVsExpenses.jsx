@@ -53,7 +53,7 @@ const IncomeVsExpenses = ({ data }) => {
             <h2 className="text-xl font-semibold mb-2 text-center">
                 Income vs Expenses
             </h2>
-            <ResponsiveContainer width="100%" height={216}>
+            <ResponsiveContainer width="100%" height={235}>
                 <LineChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis dataKey="month" stroke="#64748b" tick={{ fontSize: 13 }} />
