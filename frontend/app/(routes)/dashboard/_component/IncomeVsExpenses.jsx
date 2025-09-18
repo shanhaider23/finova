@@ -50,10 +50,10 @@ const IncomeVsExpenses = ({ data }) => {
 
     return (
         <div className="bg-card rounded-2xl shadow-lg p-6 ">
-            <h2 className="text-lg font-bold mb-4 text-blue-700 dark:text-blue-200 tracking-wide">
+            <h2 className="text-xl font-semibold mb-2 text-center">
                 Income vs Expenses
             </h2>
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={212}>
                 <LineChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis dataKey="month" stroke="#64748b" tick={{ fontSize: 13 }} />

@@ -20,9 +20,8 @@ const getPath = (x, y, width, height) => {
 	return `M${x},${y + height} 
             C${x + width / 3},${y + height} ${x + width / 2},${y + height / 3} 
             ${x + width / 2}, ${y} 
-            C${x + width / 2},${y + height / 3} ${x + (2 * width) / 3},${
-		y + height
-	} 
+            C${x + width / 2},${y + height / 3} ${x + (2 * width) / 3},${y + height
+		} 
             ${x + width}, ${y + height} Z`;
 };
 
@@ -37,6 +36,7 @@ function PiChart({ expensesList }) {
 	const [isDarkMode, setIsDarkMode] = useState(false);
 	const [data, setData] = useState([]);
 
+
 	// Detect dark or light mode
 	useEffect(() => {
 		const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -50,7 +50,7 @@ function PiChart({ expensesList }) {
 	useEffect(() => {
 		if (expensesList.length > 0) {
 			const groupedData = expensesList.reduce((acc, expense) => {
-				const month = moment(expense.createdAt, 'DD/MM/YYYY').format('MMM'); // Get the month abbreviation
+				const month = moment(expense.created_at).format('MMM'); // <-- fix here
 				if (!acc[month]) {
 					acc[month] = 0;
 				}
@@ -89,6 +89,7 @@ function PiChart({ expensesList }) {
 				<CartesianGrid strokeDasharray="3 3" />
 				<XAxis dataKey="name" />
 				<YAxis />
+				<Tooltip />
 				<Bar
 					dataKey="uv"
 					fill="#8884d8"

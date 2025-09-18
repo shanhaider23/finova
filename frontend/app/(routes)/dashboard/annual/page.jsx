@@ -2,8 +2,7 @@
 import { useSelector } from 'react-redux';
 import AnnualReport from './-component/AnnualReport';
 
-function AnnualDashboard() {
-    const { list: monthlyList } = useSelector((state) => state.monthly);
+function AnnualDashboard({ monthlyList }) {
 
 
     return (

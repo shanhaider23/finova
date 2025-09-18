@@ -3,12 +3,11 @@ import React, { useEffect, use, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import CardInfo from './_component/CardInfo';
-import BarChartDashboard from './_component/BarChart';
-import BudgetItem from './budgets/_components/BudgetItem';
-import ExpenseListTable from './expenses/[id]/_component/ExpenseListTable';
+import FinancialHealthScore from './_component/FinancialHealthScore';
 import { fetchBudgets } from '@/redux/slices/budgetSlice';
 import { fetchExpenses } from '@/redux/slices/expenseSlice';
 import { fetchMonthly } from '@/redux/slices/monthlySlice';
+import { fetchParentBudgets } from '@/redux/slices/budgetSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import Welcome from './_component/Welcome';
 import PiChartDashboard from './_component/PiChartDashboard';
@@ -18,6 +17,8 @@ import CashFlowGauge from './_component/CashFlowGauge';
 import SpendingLeaderboard from './_component/SpendingLeaderboard';
 import NetWorthChart from './_component/NetWorthChart';
 import IncomeVsExpenses from './_component/IncomeVsExpenses';
+import StockCard from './_component/StockCard';
+import CryptoCard from './_component/CryptoCard';
 
 function Dashboard({ params: paramsPromise }) {
 	const [expenseForecast, setExpenseForecast] = useState([]);
@@ -26,15 +27,15 @@ function Dashboard({ params: paramsPromise }) {
 	const { isSignedIn, user } = useUser();
 	const router = useRouter();
 	const dispatch = useDispatch();
-	const { list: budgetList, loading } = useSelector((state) => state.budgets);
 	const {
 		list: expenseList,
 
 		error,
 	} = useSelector((state) => state.expenses);
 	const { list: monthlyList } = useSelector((state) => state.monthly);
+	const { list: budgetList, parentBudgets: parentBudgetList, loading } = useSelector((state) => state.budgets);
 
-	console.log("Monthly List in Dashboard:", monthlyList);
+
 
 	useEffect(() => {
 		if (!isSignedIn) {
@@ -43,6 +44,7 @@ function Dashboard({ params: paramsPromise }) {
 			dispatch(fetchBudgets(user.primaryEmailAddress?.emailAddress));
 			dispatch(fetchExpenses(user.primaryEmailAddress.emailAddress));
 			dispatch(fetchMonthly(user.primaryEmailAddress.emailAddress));
+			dispatch(fetchParentBudgets(user.primaryEmailAddress?.emailAddress));
 		}
 	}, [isSignedIn, user, params.id]);
 	const getMonthName = (dateStr) => {
@@ -50,6 +52,34 @@ function Dashboard({ params: paramsPromise }) {
 		const monthIndex = new Date(dateStr).getMonth();
 		return months[monthIndex];
 	};
+
+	const totalIncome = monthlyList.filter(x => x.type === "income").reduce((sum, x) => sum + x.amount, 0);
+	const totalExpense = monthlyList.filter(x => x.type === "expense").reduce((sum, x) => sum + x.amount, 0);
+	const spending = totalIncome > 0 ? Math.round((totalExpense / totalIncome) * 100) : 0;
+	const savingsRate = totalIncome > 0 ? Math.round(((totalIncome - totalExpense) / totalIncome) * 100) : 0;
+
+	const totalDebtPayments = monthlyList
+		.filter(x => x.category.toLowerCase().includes("bank fee") || x.category.toLowerCase().includes("loan"))
+		.reduce((sum, x) => sum + x.amount, 0);
+	const debtRatio = totalIncome > 0 ? Math.round((totalDebtPayments / totalIncome) * 100) : 0;
+
+	// Net worth growth
+	const byMonth = {};
+	monthlyList.forEach(x => {
+		const month = x.date.slice(0, 7); // "YYYY-MM"
+		if (!byMonth[month]) byMonth[month] = { income: 0, expense: 0 };
+		if (x.type === "income") byMonth[month].income += x.amount;
+		if (x.type === "expense") byMonth[month].expense += x.amount;
+	});
+	const months = Object.keys(byMonth).sort();
+	let netWorthGrowth = 0;
+	if (months.length >= 2) {
+		const first = byMonth[months[0]];
+		const last = byMonth[months[months.length - 1]];
+		const firstSavings = first.income - first.expense;
+		const lastSavings = last.income - last.expense;
+		netWorthGrowth = firstSavings !== 0 ? Math.round(((lastSavings - firstSavings) / Math.abs(firstSavings)) * 100) : 0;
+	}
 	useEffect(() => {
 
 		const fetchData = async () => {
@@ -109,11 +139,23 @@ function Dashboard({ params: paramsPromise }) {
 		fetchData();
 	}, []);
 
+	const companies = [
+		{ name: "Apple", symbol: "AAPL" },
+		{ name: "Microsoft", symbol: "MSFT" },
+		{ name: "Amazon", symbol: "AMZN" },
+		{ name: "Google", symbol: "GOOGL" },
+		{ name: "Meta", symbol: "META" },
+		{ name: "Tesla", symbol: "TSLA" },
+		{ name: "Nvidia", symbol: "NVDA" },
+		{ name: "Netflix", symbol: "NFLX" },
+		{ name: "Visa", symbol: "V" },
+	];
+
 
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[repeat(6,1fr)] grid-rows-[repeat(3,350px)] sm:grid-rows-[repeat(3,300px)] gap-5 pl-5 pr-5 pt-5">
 			<div className="col-span-2">
-				<Welcome budgetList={budgetList} />
+				<Welcome budgetList={budgetList} parentBudgetList={parentBudgetList} />
 			</div>
 			<div className="col-span-3 md:col-span-1 lg:col-span-1">
 				<CardInfo
@@ -129,6 +171,22 @@ function Dashboard({ params: paramsPromise }) {
 					color="#98EC2D"
 				/>
 			</div>
+			<div className="col-span-2">
+
+				<IncomeVsExpenses data={monthlyList} />
+			</div>
+			<div className="col-span-2">
+				<FinancialHealthScore
+					spending={spending}
+					savingsRate={savingsRate}
+					debtRatio={debtRatio}
+					netWorthGrowth={netWorthGrowth}
+				/>
+			</div>
+			<div className="col-span-2">
+
+				<NetWorthChart data={monthlyList} />
+			</div>
 			<div className="col-span-3 md:col-span-1 lg:col-span-1 flex flex-col h-full">
 				<CashFlowGauge monthlyList={monthlyList} />
 			</div>
@@ -136,13 +194,20 @@ function Dashboard({ params: paramsPromise }) {
 
 				<SpendingLeaderboard expenses={expenseList} />
 			</div>
-			<div className="col-span-2">
 
-				<NetWorthChart data={monthlyList} />
+
+
+			<div className="col-span-2">
+				<CryptoCard />
 			</div>
 			<div className="col-span-2">
-
-				<IncomeVsExpenses data={monthlyList} />
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 lg:grid-row-3 gap-2">
+					{companies.map(company => (
+						<div key={company.symbol} className="">
+							<StockCard symbol={company.symbol} name={company.name} />
+						</div>
+					))}
+				</div>
 			</div>
 
 			<div className="col-span-3 md:col-span-2 lg:col-span-2 row-span-2 gap-5 overflow-hidden">

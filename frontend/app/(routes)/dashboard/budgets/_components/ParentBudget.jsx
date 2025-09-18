@@ -175,7 +175,7 @@ function ParentBudget() {
                                         <BarChartDashboard budgetList={getChildren(pb.id)} />
                                     </div>
                                     <div>
-                                        <CreateBudget />
+                                        <CreateBudget parentId={pb.id} />
                                     </div>
                                     {/* Child Budgets */}
                                     <div className="">

@@ -105,14 +105,17 @@ export const fetchBudgets = createAsyncThunk('budgets/fetchBudgets', async (emai
 // **Create Budget**
 export const createBudget = createAsyncThunk(
     'budgets/createBudget',
-    async ({ name, amount, currency, email, emojiIcon }) => {
+    async ({ name, amount, currency, email, emojiIcon, parent }) => {
+
         try {
+
             const response = await axios.post(`${apiBaseUrl}/api/budgets/`, {
                 name,
                 amount,
                 currency,
                 created_by: email,
                 icon: emojiIcon,
+                parent: parent
             });
 
             if (response.data) {

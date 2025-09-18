@@ -28,7 +28,7 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 
-function CreateBudget({ refreshData }) {
+function CreateBudget({ parentId }) {
 	const dispatch = useDispatch();
 	const [emojiIcon, setEmojiIcon] = useState('Emoji');
 	const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
@@ -45,7 +45,7 @@ function CreateBudget({ refreshData }) {
 			return;
 		}
 
-		dispatch(createBudget({ name, amount, currency, email, emojiIcon }));
+		dispatch(createBudget({ name, amount, currency, email, emojiIcon, parent: parentId }));
 		setName('');
 		setAmount('');
 		setCurrency('');
