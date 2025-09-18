@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import BarChartAnnual from './BarChartAnnual';
 
 function formatCurrency(amount) {
@@ -15,9 +15,19 @@ function getMonthName(monthIdx) {
 
 function AnnualReport({ monthlyList }) {
     monthlyList = monthlyList || [];
+
+
     // Get all years in the data
     const years = Array.from(new Set(monthlyList.map(item => new Date(item.date).getFullYear())));
     const [selectedYear, setSelectedYear] = useState(years[0]);
+    useEffect(() => {
+        if (years.length > 0 && !years.includes(selectedYear)) {
+            setSelectedYear(years[0]);
+        }
+    }, [years.join(','), selectedYear]);
+
+
+
 
     // Process data for the selected year
     const {

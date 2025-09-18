@@ -221,6 +221,7 @@ function InputDetail() {
 											<QuickCategoryInput category="Internet Bill" />
 											<QuickCategoryInput category="Grocery" />
 											<QuickCategoryInput category="Shopping" />
+											<QuickCategoryInput category="Kids" />
 											<QuickCategoryInput category="Food/Dining out" />
 											<QuickCategoryInput category="Bank Fees" />
 											<QuickCategoryInput category="Car Insurance" />
@@ -232,6 +233,10 @@ function InputDetail() {
 											<QuickCategoryInput category="Transport" />
 											<QuickCategoryInput category="Entertainment" />
 											<QuickCategoryInput category="Health" />
+											<QuickCategoryInput category="Vacation & Travel" />
+											<QuickCategoryInput category="Savings & Investments" type='income' />
+
+
 
 
 										</div>
