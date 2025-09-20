@@ -9,8 +9,9 @@ import {
 	Legend,
 	ResponsiveContainer,
 } from 'recharts';
+import LoadingSkeleton from '@/app/_component/LoadingSkeleton';
 
-function CardInfo({ data, name, color }) {
+function CardInfo({ data, name, color, loading }) {
 	const CustomTooltip = ({ active, payload, label }) => {
 		if (active && payload && payload.length) {
 			return (
@@ -26,6 +27,14 @@ function CardInfo({ data, name, color }) {
 		}
 		return null;
 	};
+
+	if (loading) {
+		return (
+			<div className="bg-card h-full flex justify-center items-center p-5 rounded-lg shadow-md">
+				<LoadingSkeleton height={200} />
+			</div>
+		);
+	}
 
 	return (
 		<div className="bg-card h-full flex justify-around items-center flex-col p-5 rounded-lg shadow-md">

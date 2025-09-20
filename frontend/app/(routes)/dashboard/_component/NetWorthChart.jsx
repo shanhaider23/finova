@@ -11,6 +11,7 @@ import {
     ResponsiveContainer
 } from "recharts";
 import { format, parseISO } from "date-fns";
+import LoadingSkeleton from '@/app/_component/LoadingSkeleton';
 
 
 function getLast6Months() {
@@ -53,8 +54,16 @@ export function getNetWorthChartData(data) {
 }
 
 
-const NetWorthChart = ({ data }) => {
+const NetWorthChart = ({ data, loading }) => {
     const chartData = getNetWorthChartData(data);
+
+    if (loading) {
+        return (
+            <div className="bg-card h-full flex justify-center items-center p-5 rounded-lg shadow-md">
+                <LoadingSkeleton height={200} />
+            </div>
+        );
+    }
 
     return (
         <div className="bg-card rounded-2xl shadow-lg p-6 ">

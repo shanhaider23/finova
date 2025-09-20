@@ -2,13 +2,13 @@
 import { useSelector } from 'react-redux';
 import AnnualReport from './-component/AnnualReport';
 
-function AnnualDashboard({ monthlyList }) {
+function AnnualDashboard({ monthlyList, loading }) {
 
 
     return (
         <div>
             <div className="flex justify-center flex-col gap-5 ">
-                <AnnualReport monthlyList={monthlyList} />
+                <AnnualReport monthlyList={monthlyList} loading={loading} />
             </div>
         </div>
     );

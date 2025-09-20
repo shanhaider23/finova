@@ -8,8 +8,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
+import LoadingSkeleton from '@/app/_component/LoadingSkeleton';
 
-function PiChartDashboard({ monthlyList }) {
+function PiChartDashboard({ monthlyList, loading }) {
 	const currentMonth = dayjs().format('YYYY-MM');
 	const [month, setMonth] = useState(currentMonth);
 	const months = Array.from({ length: 12 }, (_, i) => {
@@ -87,6 +88,14 @@ function PiChartDashboard({ monthlyList }) {
 		'#77f577', // Lime Green
 	];
 
+	if (loading) {
+		return (
+			<div className="bg-card h-full flex justify-center items-center p-5 rounded-lg shadow-md">
+				<LoadingSkeleton height={200} />
+			</div>
+		);
+	}
+
 	return (
 		<div className="bg-card flex justify-start items-center flex-col shadow-md">
 			<div className="flex justify-between items-center w-full">
@@ -150,7 +159,7 @@ function PiChartDashboard({ monthlyList }) {
 					</span>
 				</div>
 			</div>
-			<div className="m-5 text-center w-[92%] max-h-[310px] overflow-y-auto">
+			<div className="m-5 text-center w-[92%]  overflow-y-auto">
 				<table className="w-full border-collapse">
 					<thead>
 						<tr className="text-gray-700 dark:text-gray-300 border-b">

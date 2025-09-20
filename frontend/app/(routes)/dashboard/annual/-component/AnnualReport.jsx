@@ -1,6 +1,7 @@
 'use client';
 import React, { useMemo, useState, useEffect } from 'react';
 import BarChartAnnual from './BarChartAnnual';
+import LoadingSkeleton from '@/app/_component/LoadingSkeleton';
 
 function formatCurrency(amount) {
     return `${amount.toLocaleString()}`;
@@ -13,7 +14,7 @@ function getMonthName(monthIdx) {
     ][monthIdx];
 }
 
-function AnnualReport({ monthlyList }) {
+function AnnualReport({ monthlyList, loading }) {
     monthlyList = monthlyList || [];
 
 
@@ -99,6 +100,14 @@ function AnnualReport({ monthlyList }) {
         };
     }, [monthlyList, selectedYear]);
 
+    if (loading) {
+        return (
+            <div className="bg-card h-full flex justify-center items-center p-5 rounded-lg shadow-md">
+                <LoadingSkeleton height={200} />
+            </div>
+        );
+    }
+
     return (
         <div className=" shadow-lg overflow-hidden bg-card  mb-4 ">
             <h1 className="text-2xl font-bold p-4">Annual Insights</h1>
@@ -124,7 +133,7 @@ function AnnualReport({ monthlyList }) {
                 </div>
             </div>
             <div>
-                <BarChartAnnual data={categoryPercentData} />
+                <BarChartAnnual data={categoryPercentData} loading={loading} />
             </div>
             {/* Table */}
             <div className="overflow-x-auto">
