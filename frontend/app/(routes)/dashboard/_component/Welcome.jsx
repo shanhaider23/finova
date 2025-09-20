@@ -2,8 +2,9 @@ import { UserButton, useUser } from '@clerk/nextjs';
 import React, { useEffect, useState } from 'react';
 import FinanceAIAdviceBanner from '../advice/_component/FinanceAIAdviceBanner';
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
+import LoadingSkeleton from '@/app/_component/LoadingSkeleton';
 
-function Welcome({ budgetList, parentBudgetList }) {
+function Welcome({ budgetList, parentBudgetList, loading }) {
 	const { user } = useUser();
 	const [totalBudget, setTotalBudget] = useState(0);
 	const [totalSpend, setTotalSpend] = useState(0);
@@ -63,6 +64,14 @@ function Welcome({ budgetList, parentBudgetList }) {
 			fill: progress < 80 ? "#22c55e" : progress < 100 ? "#facc15" : "#ef4444",
 		},
 	];
+
+	if (loading) {
+		return (
+			<div className="bg-card h-full flex justify-center items-center p-5 rounded-lg shadow-md">
+				<LoadingSkeleton height={200} />
+			</div>
+		);
+	}
 
 	return (
 		<div className="flex flex-col bg-card h-full justify-between items-stretch pt-5 overflow-auto shadow-md">

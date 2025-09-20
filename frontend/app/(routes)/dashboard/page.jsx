@@ -35,7 +35,7 @@ function Dashboard({ params: paramsPromise }) {
 	const { list: monthlyList } = useSelector((state) => state.monthly);
 	const { list: budgetList, parentBudgets: parentBudgetList, loading } = useSelector((state) => state.budgets);
 
-
+	const isLoading = loading || !user || !monthlyList || !budgetList || !expenseList;
 
 	useEffect(() => {
 		if (!isSignedIn) {
@@ -155,13 +155,14 @@ function Dashboard({ params: paramsPromise }) {
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 auto-rows-[minmax(250px,auto)] gap-y-8 gap-x-5 px-2 sm:px-4 pt-5">
 			<div className="lg:col-span-2 col-span-1">
-				<Welcome budgetList={budgetList} parentBudgetList={parentBudgetList} />
+				<Welcome budgetList={budgetList} parentBudgetList={parentBudgetList} loading={isLoading} />
 			</div>
 			<div className="lg:col-span-1 col-span-1">
 				<CardInfo
 					data={expenseForecast}
 					name="Expense Forecast"
 					color="#F63642"
+					loading={isLoading}
 				/>
 			</div>
 			<div className="lg:col-span-1 col-span-1">
@@ -169,10 +170,11 @@ function Dashboard({ params: paramsPromise }) {
 					data={incomeForecast}
 					name="Income Forecast"
 					color="#98EC2D"
+					loading={isLoading}
 				/>
 			</div>
 			<div className="lg:col-span-2 col-span-1">
-				<IncomeVsExpenses data={monthlyList} />
+				<IncomeVsExpenses data={monthlyList} loading={isLoading} />
 			</div>
 			<div className="lg:col-span-2 col-span-1">
 				<FinancialHealthScore
@@ -180,34 +182,35 @@ function Dashboard({ params: paramsPromise }) {
 					savingsRate={savingsRate}
 					debtRatio={debtRatio}
 					netWorthGrowth={netWorthGrowth}
+					loading={isLoading}
 				/>
 			</div>
 			<div className="lg:col-span-2 col-span-1">
-				<NetWorthChart data={monthlyList} />
+				<NetWorthChart data={monthlyList} loading={isLoading} />
 			</div>
 			<div className="lg:col-span-1 col-span-1 flex flex-col h-full">
-				<CashFlowGauge monthlyList={monthlyList} />
+				<CashFlowGauge monthlyList={monthlyList} loading={isLoading} />
 			</div>
 			<div className="lg:col-span-1 col-span-1 flex flex-col h-full">
-				<SpendingLeaderboard expenses={expenseList} />
+				<SpendingLeaderboard expenses={expenseList} loading={isLoading} />
 			</div>
 			<div className="lg:col-span-2 col-span-1">
-				<CryptoCard />
+				<CryptoCard loading={isLoading} />
 			</div>
 			<div className="lg:col-span-2 col-span-1">
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
 					{companies.map(company => (
 						<div key={company.symbol}>
-							<StockCard symbol={company.symbol} name={company.name} />
+							<StockCard symbol={company.symbol} name={company.name} loading={isLoading} />
 						</div>
 					))}
 				</div>
 			</div>
 			<div className="lg:col-span-2 col-span-1 row-span-2 gap-5 overflow-hidden">
-				<PiChartDashboard monthlyList={monthlyList} />
+				<PiChartDashboard monthlyList={monthlyList} loading={isLoading} />
 			</div>
 			<div className="lg:col-span-4 col-span-1 row-span-2 overflow-y-auto overflow-x-hidden pr-2">
-				<AnnualDashboard monthlyList={monthlyList} />
+				<AnnualDashboard monthlyList={monthlyList} loading={isLoading} />
 			</div>
 		</div>
 	);

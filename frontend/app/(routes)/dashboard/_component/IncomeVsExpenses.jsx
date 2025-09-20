@@ -11,7 +11,7 @@ import {
     ResponsiveContainer
 } from "recharts";
 import { format, parseISO } from "date-fns";
-
+import LoadingSkeleton from '@/app/_component/LoadingSkeleton';
 function getLast6Months() {
     const now = new Date();
     return Array.from({ length: 6 }).map((_, i) => {
@@ -44,9 +44,17 @@ function getIncomeVsExpensesData(data) {
 
     return result;
 }
-const IncomeVsExpenses = ({ data }) => {
+const IncomeVsExpenses = ({ data, loading }) => {
 
     const chartData = getIncomeVsExpensesData(data);
+
+    if (loading) {
+        return (
+            <div className="bg-card h-full flex justify-center items-center p-5 rounded-lg shadow-md">
+                <LoadingSkeleton height={200} />
+            </div>
+        );
+    }
 
     return (
         <div className="bg-card rounded-2xl shadow-lg p-6 ">

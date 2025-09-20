@@ -9,6 +9,7 @@ import {
     ResponsiveContainer,
     CartesianGrid,
 } from "recharts";
+import LoadingSkeleton from '@/app/_component/LoadingSkeleton';
 
 const COINS = [
     { id: "bitcoin", name: "Bitcoin" },
@@ -38,31 +39,31 @@ const TIME_RANGES = [
     { value: 365, label: "1Y" },
 ];
 
-export default function CryptoCard() {
+export default function CryptoCard({ loading }) {
     const [currency, setCurrency] = useState("usd");
     const [coin, setCoin] = useState("bitcoin");
     const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
+
     const [days, setDays] = useState(30);
     const [chartData, setChartData] = useState([]);
-    const [chartLoading, setChartLoading] = useState(true);
+
 
     // Fetch coin market data
     useEffect(() => {
-        setLoading(true);
+
         fetch(
             `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&ids=${coin}&order=market_cap_desc&per_page=1&page=1&sparkline=false`
         )
             .then((res) => res.json())
             .then((json) => {
                 setData(json[0]);
-                setLoading(false);
+
             });
     }, [currency, coin]);
 
     // Fetch historical chart data
     useEffect(() => {
-        setChartLoading(true);
+
         fetch(
             `https://api.coingecko.com/api/v3/coins/${coin}/market_chart?vs_currency=${currency}&days=${days}`
         )
@@ -76,9 +77,17 @@ export default function CryptoCard() {
                     price,
                 }));
                 setChartData(formatted);
-                setChartLoading(false);
+
             });
     }, [coin, currency, days]);
+
+    if (loading) {
+        return (
+            <div className="bg-card h-full flex justify-center items-center p-5 rounded-lg shadow-md">
+                <LoadingSkeleton height={200} />
+            </div>
+        );
+    }
 
     return (
         <div className="bg-card rounded-xl shadow-lg p-5 w-full h-[100%] ">
@@ -117,15 +126,18 @@ export default function CryptoCard() {
                     ))}
                 </select>
             </div>
-            <div className="w-full flex items-center gap-4">
-                <div className="flex flex-col items-center ">
+            <div className="w-full flex items-center flex-col gap-4 justify-around h-full w-full pb-12">
 
-                    {loading ? (
-                        <div className="text-gray-500">Loading...</div>
-                    ) : data ? (
-                        <>
+
+                {loading ? (
+                    <div className="text-gray-500">Loading...</div>
+                ) : data ? (
+                    <div className="flex items-center gap-4 justify-around w-full  " >
+                        <div className="flex flex-col items-center justify-around">
                             <img src={data.image} alt={data.name} className="w-12 h-12 mb-2" />
                             <div className="text-lg font-bold mb-1">{data.name}</div>
+                        </div>
+                        <div className="flex flex-col items-center">
                             <div className="text-2xl font-bold mb-1 text-center">
                                 {data.current_price} {currency.toUpperCase()}
                             </div>
@@ -141,14 +153,15 @@ export default function CryptoCard() {
                             <div className="text-xs text-gray-500 mb-2 text-center">
                                 Market Cap: {data.market_cap.toLocaleString()} {currency.toUpperCase()}
                             </div>
-                        </>
-                    ) : (
-                        <div className="text-gray-500">No data</div>
-                    )}
-                </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="text-gray-500">No data</div>
+                )}
+
                 {/* Line Chart */}
                 <div className="w-full h-40 mt-2">
-                    {chartLoading ? (
+                    {loading ? (
                         <div className="text-gray-400 text-center">Loading chart...</div>
                     ) : (
                         <ResponsiveContainer width="100%" height="100%">

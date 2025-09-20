@@ -1,5 +1,6 @@
 import React from "react";
 import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from "recharts";
+import LoadingSkeleton from '@/app/_component/LoadingSkeleton';
 
 // Dummy calculation (replace with your real logic)
 function calculateScore({ spending, savingsRate, debtRatio, netWorthGrowth }) {
@@ -24,6 +25,7 @@ export default function FinancialHealthScore({
     savingsRate = 30,     // percent of income saved
     debtRatio = 20,       // percent of income to debt payments
     netWorthGrowth = 10,  // percent growth this year
+    loading
 }) {
     const score = calculateScore({ spending, savingsRate, debtRatio, netWorthGrowth });
     const gaugeData = [
@@ -33,7 +35,13 @@ export default function FinancialHealthScore({
             fill: score < 60 ? "#ef4444" : score < 80 ? "#facc15" : "#22c55e",
         },
     ];
-
+    if (loading) {
+        return (
+            <div className="bg-card h-full flex justify-center items-center p-5 rounded-lg shadow-md">
+                <LoadingSkeleton height={200} />
+            </div>
+        );
+    }
     return (
         <div className="bg-card rounded-xl shadow-lg p-5 flex flex-col items-center w-full h-[100%]">
             <h2 className="text-xl font-semibold text-center">Financial Health Score</h2>

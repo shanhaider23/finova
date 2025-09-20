@@ -6,8 +6,9 @@ import {
     Tooltip,
     PolarAngleAxis
 } from "recharts";
+import LoadingSkeleton from '@/app/_component/LoadingSkeleton';
 
-const CashFlowGauge = ({ monthlyList = [] }) => {
+const CashFlowGauge = ({ monthlyList = [], loading }) => {
     // Calculate total income and expenses from monthlyList
     const totalIncome = monthlyList
         .filter(item => item.type === "income")
@@ -27,6 +28,14 @@ const CashFlowGauge = ({ monthlyList = [] }) => {
             fill: cashFlow >= 0 ? "#4CAF50" : "#F63642", // green or red
         },
     ];
+
+    if (loading) {
+        return (
+            <div className="bg-card h-full flex justify-center items-center p-5 rounded-lg shadow-md">
+                <LoadingSkeleton height={200} />
+            </div>
+        );
+    }
 
     return (
         <div className="bg-card h-full flex justify-around items-center flex-col p-5 rounded-lg shadow-md">

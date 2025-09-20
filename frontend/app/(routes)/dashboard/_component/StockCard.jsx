@@ -1,15 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import LoadingSkeleton from '@/app/_component/LoadingSkeleton';
 
-export default function StockCard({ symbol = "AAPL", name = "Apple Inc." }) {
+export default function StockCard({ symbol = "AAPL", name = "Apple Inc.", loading }) {
     const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const apiKey = process.env.ALPHA_VANTAGE_API_KEY;
 
     useEffect(() => {
         if (!symbol) return;
-        setLoading(true);
+
         setError(null);
 
         // Direct fetch from Alpha Vantage
@@ -36,13 +36,21 @@ export default function StockCard({ symbol = "AAPL", name = "Apple Inc." }) {
                         shortName: symbol,
                     });
                 }
-                setLoading(false);
+               
             })
             .catch(() => {
                 setError("Failed to fetch stock data");
-                setLoading(false);
+               
             });
     }, [symbol]);
+
+    if (loading) {
+        return (
+            <div className="bg-card h-full flex justify-center items-center p-5 rounded-lg shadow-md">
+                <LoadingSkeleton height={200} />
+            </div>
+        );
+    }
 
     return (
         <div className="bg-card rounded-xl shadow-lg p-5 w-full h-full flex flex-col items-center">

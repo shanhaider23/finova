@@ -9,8 +9,9 @@ import {
 	XAxis,
 	YAxis,
 } from 'recharts';
+import LoadingSkeleton from '@/app/_component/LoadingSkeleton';
 
-function BarChartDashboard({ budgetList, totalBudget, totalSpend }) {
+function BarChartDashboard({ budgetList, loading }) {
 	const [isDarkMode, setIsDarkMode] = useState(false);
 
 	useEffect(() => {
@@ -32,6 +33,14 @@ function BarChartDashboard({ budgetList, totalBudget, totalSpend }) {
 			remaining: Math.max(item.amount - item.totalSpend, 0),
 		};
 	});
+
+	if (loading) {
+		return (
+			<div className="bg-card h-full flex justify-center items-center p-5 rounded-lg shadow-md">
+				<LoadingSkeleton height={200} />
+			</div>
+		);
+	}
 
 	return (
 		<div className="shadow-lg bg-card h-full hover:shadow-xl p-5">
