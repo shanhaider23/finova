@@ -153,7 +153,7 @@ function Dashboard({ params: paramsPromise }) {
 
 
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 auto-rows-[minmax(250px,auto)] gap-y-8 gap-x-5 px-2 sm:px-4 pt-5">
+		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 auto-rows-[minmax(250px,auto)] gap-y-2 gap-x-2 px-2 sm:px-4 pt-5">
 			<div className="lg:col-span-2 col-span-1">
 				<Welcome budgetList={budgetList} parentBudgetList={parentBudgetList} loading={isLoading} />
 			</div>
@@ -209,7 +209,7 @@ function Dashboard({ params: paramsPromise }) {
 			<div className="lg:col-span-2 col-span-1 row-span-2 gap-5 overflow-hidden">
 				<PiChartDashboard monthlyList={monthlyList} loading={isLoading} />
 			</div>
-			<div className="lg:col-span-4 col-span-1 row-span-2 overflow-y-auto overflow-x-hidden pr-2">
+			<div className="lg:col-span-4 col-span-1 row-span-2 overflow-y-auto overflow-x-hidden ">
 				<AnnualDashboard monthlyList={monthlyList} loading={isLoading} />
 			</div>
 		</div>
